@@ -42,6 +42,10 @@ nav{background:white;border-bottom:3px solid var(--orange);position:sticky;top:0
 .fg input{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:.6rem .85rem;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;color:var(--dark);outline:none;background:white;transition:border-color .15s}
 .fg input:focus{border-color:var(--orange)}
 .hint{font-size:.72rem;color:var(--gray);margin-top:.25rem;font-style:italic;font-weight:600}
+.hero-callout{max-width:900px;margin:-0.5rem auto 0;padding:.75rem 1.5rem 1.5rem;text-align:center}
+.hero-callout p{font-size:1.05rem;font-weight:700;color:var(--dark);line-height:1.65;margin-bottom:.4rem}
+.hero-callout .hero-sub{font-size:.88rem;font-weight:600;color:var(--gray);line-height:1.65}
+.hero-callout strong{color:var(--orange)}
 .cbw{display:flex;justify-content:center;padding:0 1.5rem 2rem}
 .cbtn{background:linear-gradient(135deg,var(--ol),var(--od));color:white;border:none;border-radius:50px;padding:.9rem 2.5rem;font-family:'Nunito',sans-serif;font-size:1.05rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:.5rem;box-shadow:0 4px 15px rgba(244,98,31,.4);transition:all .2s}
 .cbtn:hover{transform:translateY(-2px)}
@@ -77,6 +81,7 @@ nav{background:white;border-bottom:3px solid var(--orange);position:sticky;top:0
 .srow{display:flex;justify-content:center;gap:.75rem;margin-bottom:1.25rem;flex-wrap:wrap}
 .sbtn{background:var(--blue);color:white;border:none;border-radius:50px;padding:.6rem 1.4rem;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:.4rem}
 .cpbtn{background:white;color:var(--dark);border:2px solid var(--border);border-radius:50px;padding:.6rem 1.4rem;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:.4rem}
+.shared-banner{background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1.5px solid #bfdbfe;border-radius:14px;padding:.9rem 1.25rem;display:flex;align-items:center;gap:.75rem;font-size:.875rem;font-weight:700;color:var(--blue);margin-bottom:1rem}
 .vcard{background:white;border-radius:16px;padding:1.75rem;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:1.25rem;text-align:center}
 .vcard h3{font-size:1.05rem;font-weight:800;margin-bottom:1.5rem}
 
@@ -308,6 +313,10 @@ footer{background:var(--dark);color:white;padding:2.5rem 1.5rem}
 <!-- CALCULATOR -->
 <div class="page active" id="page-calc">
   <div class="ph"><h1>Enter Your Pizza Details</h1><p>We'll calculate how much pizza you're getting for your money</p></div>
+  <div class="hero-callout">
+    <p>Bigger pizza, better deal? Usually — but not always. Enter your two options and find out exactly how much more you're getting per dollar.</p>
+    <p class="hero-sub">More area isn't enough on its own. What matters is <strong>cost per Pizzabyte</strong> — how much each bite actually costs you. That's what decides the winner.</p>
+  </div>
   <div class="calc-grid">
     <div class="pcard">
       <div class="pcard-head"><div class="pic or">🍕</div><div><h2 style="font-size:1.15rem;font-weight:800">Large Pizza</h2><p class="hint" style="margin-top:.1rem">Enter your pizza's details below</p></div></div>
@@ -324,10 +333,14 @@ footer{background:var(--dark);color:white;padding:2.5rem 1.5rem}
   <div class="results" id="results">
     <div class="wbanner"><div class="winner-left"><div class="wbl">BEST DEAL WINNER! 🎉</div><div class="wbn" id="wname">Large Pizza</div></div><div class="ysbox"><div class="ysl">YOU SAVE</div><div class="ysp" id="ysave">0%</div></div></div>
     <div class="rg" id="rcards"></div>
-    <div class="vcard"><h3>Visual Size Comparison 👀</h3><div class="vcircles" id="vcircles"></div></div>
+    <div class="vcard"><h3>Visual Size Comparison 👀</h3><p style="font-size:.8rem;font-weight:600;color:var(--gray);margin-top:-.75rem;margin-bottom:1rem">Size tells you the area. Price per Pizzabyte tells you the value.</p><div class="vcircles" id="vcircles"></div></div>
     <div class="srow">
       <button class="sbtn" onclick="doShare()">🔗 Share Your Savings!</button>
       <button class="cpbtn" onclick="doCopy()">📋 Copy Link</button>
+    </div>
+    <div class="shared-banner" id="shared-banner" style="display:none">
+      <span>🔗</span>
+      <span id="shared-text">Someone shared this pizza comparison with you!</span>
     </div>
   </div>
 </div>
@@ -336,7 +349,7 @@ footer{background:var(--dark);color:white;padding:2.5rem 1.5rem}
 <div class="page" id="page-learn">
   <div class="ph"><h1>The Math Behind the Pizza</h1><p>Why geometry matters when buying pizza</p></div>
   <div class="li">
-    <div class="lcallout">Ever wonder why one large pizza beats two mediums? It all comes down to geometry — and price. 🍕 Try it below!</div>
+    <div class="lcallout">A bigger pizza has more area — but that's only half the story. The real question is what you're paying for each bite. 🍕 That's what Pizzabytes are for.</div>
     <div class="tgc wh" style="padding:1.5rem;margin-bottom:1.4rem">
       <h3>🔢 Try It: Enter Any Two Pizzas</h3>
       <div class="linputs">
@@ -359,9 +372,10 @@ footer{background:var(--dark);color:white;padding:2.5rem 1.5rem}
     </div>
     <div class="lcard pu">
       <h3>The Pizzabyte System™</h3>
-      <p style="font-size:.875rem;font-weight:600;margin-bottom:.5rem;line-height:1.6">We measure pizza in <span style="color:var(--purple);font-weight:800">Pizzabytes</span> — each is 3 sq in (about one bite).</p>
+      <p style="font-size:.875rem;font-weight:600;margin-bottom:.5rem;line-height:1.6">We measure pizza in <span style="color:var(--purple);font-weight:800">Pizzabytes</span> — each is 3 sq in (about one bite). <strong style="color:var(--purple)">This is the value metric.</strong></p>
+      <p style="font-size:.85rem;font-weight:600;margin-bottom:.5rem;line-height:1.6">Area alone doesn't tell you which pizza is the better deal — a huge pizza at a huge price can still be a rip-off. <strong>Cost per Pizzabyte</strong> factors in both size and price, so you're comparing apples to apples.</p>
       <p style="font-size:.85rem;font-weight:600;margin-bottom:.25rem">A 16" pizza = 67 Pizzabytes &nbsp;|&nbsp; A 12" pizza = 38 Pizzabytes</p>
-      <p style="font-size:.85rem;font-weight:600;color:var(--gray);line-height:1.6;margin-top:.5rem">This makes comparing deals super easy: you see how many bites you get for your dollar!</p>
+      <p style="font-size:.85rem;font-weight:600;color:var(--gray);line-height:1.6;margin-top:.5rem">Lower cost per Pizzabyte = better value, full stop.</p>
     </div>
     <button class="lcta" onclick="showPage('calc')">Try the full calculator →</button>
   </div>
@@ -393,7 +407,7 @@ footer{background:var(--dark);color:white;padding:2.5rem 1.5rem}
         <div class="ovc bl"><div class="ovi">👥</div><h4>Best for</h4><p>Grades 6–9 · 60–90 min · Math, Consumer Ed, Data Science</p></div>
         <div class="ovc gr"><div class="ovi">🛠️</div><h4>Materials</h4><p>Worksheet (Worksheet tab) · Calculator · All graphs and data tools built into this page</p></div>
         <div class="ovc or"><div class="ovi">📱</div><h4>Tech needed</h4><p>1 device to project this site — no Google Sheets or external tools required</p></div>
-        <div class="ovc pu"><div class="ovi">💡</div><h4>Big idea</h4><p>A pizza's value isn't about size — it's about area. π makes larger pizzas an exponentially better deal.</p></div>
+        <div class="ovc pu"><div class="ovi">💡</div><h4>Big idea</h4><p>A pizza's value isn't about size, and it's not even just about area. It's about <strong>cost per Pizzabyte</strong> — what each bite actually costs you after factoring in both size and price.</p></div>
       </div>
     </div>
 
@@ -428,11 +442,11 @@ footer{background:var(--dark);color:white;padding:2.5rem 1.5rem}
               <th style="width:75px">Size 1<br><small>(inches)</small></th>
               <th style="width:72px">Price 1<br><small>($)</small></th>
               <th style="width:85px">Area 1<br><small>(sq in)</small></th>
-              <th style="width:85px">c/in² (1)</th>
+              <th style="width:85px">¢/in² (1)</th>
               <th style="width:75px">Size 2<br><small>(inches)</small></th>
               <th style="width:72px">Price 2<br><small>($)</small></th>
               <th style="width:85px">Area 2<br><small>(sq in)</small></th>
-              <th style="width:85px">c/in² (2)</th>
+              <th style="width:85px">¢/in² (2)</th>
               <th style="width:95px">Better Deal</th>
               <th style="width:36px"></th>
             </tr></thead>
@@ -693,8 +707,8 @@ function doCalc(){
 
 function mkRC(name,col,d,p,area,rate,bytes,cpbv,isW){
   return '<div class="rc'+(isW?' win':'')+'"><div class="rch"><div class="rcn"><div class="pic '+col+'" style="width:32px;height:32px;font-size:.9rem">🍕</div>'+name+'</div>'+(isW?'<div class="wpill">WINNER</div>':'')+'</div>'+
-    '<div class="sb"><div class="sbl">COST PER SQUARE INCH</div><div class="sbv">$'+rate.toFixed(4)+'</div><div class="sbs">'+area.toFixed(0)+' sq in total</div></div>'+
-    '<div class="sb pt"><div class="sbl">PIZZABYTES (1 = 3 SQ IN)</div><div class="sbv">'+bytes+' Pizzabytes</div><div class="sbs">'+cpbv.toFixed(1)+'c each</div></div>'+
+    '<div class="sb"><div class="sbl">COST PER SQUARE INCH</div><div class="sbv">$'+rate.toFixed(4)+'</div><div class="sbs">'+area.toFixed(0)+' sq in total — area alone doesn\'t decide the winner</div></div>'+
+    '<div class="sb pt"><div class="sbl">COST PER PIZZABYTE — THE VALUE METRIC</div><div class="sbv">'+cpbv.toFixed(1)+'¢</div><div class="sbs">'+bytes+' Pizzabytes — lower = better deal</div></div>'+
     '</div>';
 }
 
@@ -762,9 +776,9 @@ function ssSet(id,field,val){
   var r2=document.getElementById('ssr2-'+id);
   var bd=document.getElementById('ssbd-'+id);
   if(a1)a1.textContent=c1.area;
-  if(r1)r1.textContent=c1.rate?c1.rate+'c':'';
+  if(r1)r1.textContent=c1.rate?c1.rate+'¢':'';
   if(a2)a2.textContent=c2.area;
-  if(r2)r2.textContent=c2.rate?c2.rate+'c':'';
+  if(r2)r2.textContent=c2.rate?c2.rate+'¢':'';
   if(bd){
     var bdt='-',bdc='var(--gray)',bdw=400;
     if(c1.rate&&c2.rate){
@@ -811,11 +825,11 @@ function renderSS(){
       '<td><input class="ssi ssn" id="ssin-d1-'+row.id+'" value="'+row.d1+'" placeholder="12" type="number" min="1" max="48" step="0.5" oninput="ssSet('+row.id+',\'d1\',this.value)"></td>'+
       '<td><input class="ssi ssn" id="ssin-p1-'+row.id+'" value="'+row.p1+'" placeholder="9.99" type="number" min="0" step="0.01" oninput="ssSet('+row.id+',\'p1\',this.value)"></td>'+
       '<td class="ssc gcc" id="ssa1-'+row.id+'">'+c1.area+'</td>'+
-      '<td class="ssc gcc" id="ssr1-'+row.id+'">'+(c1.rate?c1.rate+'c':'')+'</td>'+
+      '<td class="ssc gcc" id="ssr1-'+row.id+'">'+(c1.rate?c1.rate+'¢':'')+'</td>'+
       '<td><input class="ssi ssn" id="ssin-d2-'+row.id+'" value="'+row.d2+'" placeholder="16" type="number" min="1" max="48" step="0.5" oninput="ssSet('+row.id+',\'d2\',this.value)"></td>'+
       '<td><input class="ssi ssn" id="ssin-p2-'+row.id+'" value="'+row.p2+'" placeholder="18.99" type="number" min="0" step="0.01" oninput="ssSet('+row.id+',\'p2\',this.value)"></td>'+
       '<td class="ssc bcc" id="ssa2-'+row.id+'">'+c2.area+'</td>'+
-      '<td class="ssc bcc" id="ssr2-'+row.id+'">'+(c2.rate?c2.rate+'c':'')+'</td>'+
+      '<td class="ssc bcc" id="ssr2-'+row.id+'">'+(c2.rate?c2.rate+'¢':'')+'</td>'+
       '<td class="ssc" id="ssbd-'+row.id+'" style="color:'+bdc+';font-weight:'+bdw+'">'+bdt+'</td>'+
       '<td><button class="ssdel" onclick="ssDel('+row.id+')">✕</button></td>'+
       '</tr>';
@@ -839,14 +853,14 @@ function renderSSSum(){
   var mid=rates.length;
   var median=mid%2===0?(sorted[mid/2-1]+sorted[mid/2])/2:sorted[Math.floor(mid/2)];
   var range=(Math.max.apply(null,rates)-Math.min.apply(null,rates)).toFixed(2);
-  el.innerHTML='Class Stats: Mean <strong>'+mean+'c/in²</strong> | Median <strong>'+median.toFixed(2)+'c</strong> | Range <strong>'+range+'c</strong> | Size 1 wins: <strong>'+s1w+'</strong> | Size 2 wins: <strong>'+s2w+'</strong>';
+  el.innerHTML='Class Stats: Mean <strong>'+mean+'¢/in²</strong> | Median <strong>'+median.toFixed(2)+'¢</strong> | Range <strong>'+range+'¢</strong> | Size 1 wins: <strong>'+s1w+'</strong> | Size 2 wins: <strong>'+s2w+'</strong>';
 }
 
 function ssPrint(){
   var rows=ssRows.map(function(r){
     var c1=ssCalc(r.d1,r.p1),c2=ssCalc(r.d2,r.p2);
     var bd='';if(c1.rate&&c2.rate){var v1=parseFloat(c1.rate),v2=parseFloat(c2.rate);bd=v1<v2?'Size 1':v2<v1?'Size 2':'Tie'}
-    return '<tr><td>'+esc(r.student||'-')+'</td><td>'+esc(r.restaurant||'-')+'</td><td>'+(r.d1||'-')+'"</td><td>$'+(r.p1||'-')+'</td><td>'+(c1.area||'-')+'</td><td>'+(c1.rate?c1.rate+'c':'-')+'</td><td>'+(r.d2||'-')+'"</td><td>$'+(r.p2||'-')+'</td><td>'+(c2.area||'-')+'</td><td>'+(c2.rate?c2.rate+'c':'-')+'</td><td>'+bd+'</td></tr>';
+    return '<tr><td>'+esc(r.student||'-')+'</td><td>'+esc(r.restaurant||'-')+'</td><td>'+(r.d1||'-')+'"</td><td>$'+(r.p1||'-')+'</td><td>'+(c1.area||'-')+'</td><td>'+(c1.rate?c1.rate+'¢':'-')+'</td><td>'+(r.d2||'-')+'"</td><td>$'+(r.p2||'-')+'</td><td>'+(c2.area||'-')+'</td><td>'+(c2.rate?c2.rate+'¢':'-')+'</td><td>'+bd+'</td></tr>';
   }).join('');
   var w=window.open('','_blank');
   w.document.write('<!DOCTYPE html><html><head><title>Class Pizza Data</title><style>body{font-family:Arial,sans-serif;padding:1.5cm;font-size:9pt}h1{font-size:13pt;margin-bottom:8pt}table{border-collapse:collapse;width:100%}th{background:#f4621f;color:white;padding:5pt 7pt;text-align:left;font-size:8.5pt}td{border:.5pt solid #ddd;padding:4pt 7pt;font-size:8.5pt}tr:nth-child(even){background:#fafafa}@page{size:landscape;margin:1.5cm}</style></head>');
@@ -879,7 +893,7 @@ function drawBar(){
   var maxR=Math.max.apply(null,pts.map(function(p){return p.rate}))*1.15;
   var minR=Math.min.apply(null,pts.map(function(p){return p.rate}));
   var svg='<svg viewBox="0 0 '+W+' '+(H+PT+PB)+'" style="width:100%;min-width:300px;font-family:Nunito,sans-serif">';
-  for(var i=0;i<=4;i++){var yv=(i/4)*maxR,y=PT+H-(i/4)*H;svg+='<line x1="'+PL+'" y1="'+y+'" x2="'+(W-PR)+'" y2="'+y+'" stroke="#e5e7eb" stroke-width="1"/><text x="'+(PL-5)+'" y="'+(y+4)+'" text-anchor="end" font-size="10" fill="#9ca3af">'+yv.toFixed(1)+'c</text>'}
+  for(var i=0;i<=4;i++){var yv=(i/4)*maxR,y=PT+H-(i/4)*H;svg+='<line x1="'+PL+'" y1="'+y+'" x2="'+(W-PR)+'" y2="'+y+'" stroke="#e5e7eb" stroke-width="1"/><text x="'+(PL-5)+'" y="'+(y+4)+'" text-anchor="end" font-size="10" fill="#9ca3af">'+yv.toFixed(1)+'¢</text>'}
   svg+='<line x1="'+PL+'" y1="'+PT+'" x2="'+PL+'" y2="'+(PT+H)+'" stroke="#d1d5db" stroke-width="1.5"/><line x1="'+PL+'" y1="'+(PT+H)+'" x2="'+(W-PR)+'" y2="'+(PT+H)+'" stroke="#d1d5db" stroke-width="1.5"/>';
   var x=PL+gGap;
   keys.forEach(function(key){
@@ -891,7 +905,7 @@ function drawBar(){
       var isW=Math.abs(p.rate-minR)<0.001;
       var col=p.sz==='S1'?(isW?'#16a34a':'#86efac'):(isW?'#1d4ed8':'#93c5fd');
       svg+='<rect x="'+x+'" y="'+y2+'" width="'+bW+'" height="'+h+'" fill="'+col+'" rx="3"/>';
-      svg+='<text x="'+(x+bW/2)+'" y="'+(y2-4)+'" text-anchor="middle" font-size="9" fill="#374151">'+p.rate.toFixed(1)+'c</text>';
+      svg+='<text x="'+(x+bW/2)+'" y="'+(y2-4)+'" text-anchor="middle" font-size="9" fill="#374151">'+p.rate.toFixed(1)+'¢</text>';
       svg+='<text x="'+(x+bW/2)+'" y="'+(PT+H+36)+'" text-anchor="middle" font-size="9" fill="'+(p.sz==='S1'?'#16a34a':'#1d4ed8')+'">'+p.d+'"</text>';
       if(isW)svg+='<circle cx="'+(x+bW/2)+'" cy="'+(y2-14)+'" r="6" fill="none" stroke="#16a34a" stroke-width="2"/>';
       x+=bW+gap;
@@ -921,7 +935,7 @@ function drawScatter(){
   var slope=(n*sumXY-sumX*sumY)/(n*sumX2-sumX*sumX);
   var intercept=(sumY-slope*sumX)/n;
   var svg='<svg viewBox="0 0 '+W+' '+(H+PT+PB)+'" style="width:100%;max-width:560px;font-family:Nunito,sans-serif">';
-  for(var i=0;i<=4;i++){var rv=minR+(i/4)*(maxR-minR),y=py(rv);svg+='<line x1="'+PL+'" y1="'+y+'" x2="'+(W-PR)+'" y2="'+y+'" stroke="#e5e7eb" stroke-width="1"/><text x="'+(PL-5)+'" y="'+(y+4)+'" text-anchor="end" font-size="10" fill="#9ca3af">'+rv.toFixed(1)+'c</text>'}
+  for(var i=0;i<=4;i++){var rv=minR+(i/4)*(maxR-minR),y=py(rv);svg+='<line x1="'+PL+'" y1="'+y+'" x2="'+(W-PR)+'" y2="'+y+'" stroke="#e5e7eb" stroke-width="1"/><text x="'+(PL-5)+'" y="'+(y+4)+'" text-anchor="end" font-size="10" fill="#9ca3af">'+rv.toFixed(1)+'¢</text>'}
   for(var j=0;j<=4;j++){var dv=minD+(j/4)*(maxD-minD),xv=px(dv);svg+='<line x1="'+xv+'" y1="'+PT+'" x2="'+xv+'" y2="'+(PT+H)+'" stroke="#e5e7eb" stroke-width="1"/><text x="'+xv+'" y="'+(PT+H+16)+'" text-anchor="middle" font-size="10" fill="#9ca3af">'+dv.toFixed(0)+'"</text>'}
   svg+='<line x1="'+PL+'" y1="'+PT+'" x2="'+PL+'" y2="'+(PT+H)+'" stroke="#d1d5db" stroke-width="1.5"/><line x1="'+PL+'" y1="'+(PT+H)+'" x2="'+(W-PR)+'" y2="'+(PT+H)+'" stroke="#d1d5db" stroke-width="1.5"/>';
   var ty1=Math.max(minR,Math.min(maxR,slope*minD+intercept));
@@ -999,12 +1013,47 @@ function printWS(){
 }
 
 // SHARE
-function doShare(){
-  if(navigator.share)navigator.share({title:'Pizza Deal Calculator',text:'I found the best pizza deal using 🍕 πr².com!',url:location.href});
-  else doCopy();
+function buildShareURL(){
+  var ld=document.getElementById('ld').value;
+  var lp=document.getElementById('lp').value;
+  var sd=document.getElementById('sd').value;
+  var sp=document.getElementById('sp').value;
+  var base=location.href.split('?')[0];
+  return base+'?ld='+encodeURIComponent(ld)+'&lp='+encodeURIComponent(lp)+'&sd='+encodeURIComponent(sd)+'&sp='+encodeURIComponent(sp);
 }
+
+function doShare(){
+  var url=buildShareURL();
+  var text='Check out this pizza deal comparison I made on pizzapirsquared.com!';
+  if(navigator.share){
+    navigator.share({title:'🍕 Pizza Deal Comparison',text:text,url:url});
+  } else {
+    navigator.clipboard.writeText(url).then(function(){notify('Link copied! Share it anywhere.')}).catch(function(){notify('Copy this link: '+url)});
+  }
+}
+
 function doCopy(){
-  navigator.clipboard.writeText(location.href).then(function(){notify('Link copied!')}).catch(function(){notify('Link: '+location.href)});
+  var url=buildShareURL();
+  navigator.clipboard.writeText(url).then(function(){notify('Link copied!')}).catch(function(){notify('Link: '+url)});
+}
+
+function readURLParams(){
+  var params=new URLSearchParams(window.location.search);
+  var ld=params.get('ld'),lp=params.get('lp'),sd=params.get('sd'),sp=params.get('sp');
+  if(ld&&lp&&sd&&sp){
+    document.getElementById('ld').value=ld;
+    document.getElementById('lp').value=lp;
+    document.getElementById('sd').value=sd;
+    document.getElementById('sp').value=sp;
+    doCalc();
+    var banner=document.getElementById('shared-banner');
+    var txt=document.getElementById('shared-text');
+    if(banner&&txt){
+      var savings=document.getElementById('ysave').textContent;
+      txt.textContent='Someone shared this pizza comparison with you — the best deal saves '+savings+'!';
+      banner.style.display='flex';
+    }
+  }
 }
 
 // UTILS
@@ -1017,6 +1066,7 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 
 // INIT
 learnCalc();
+readURLParams();
 ssRows=[
   {id:ssId++,student:'Alex',restaurant:"Joe's Pizza",d1:'12',p1:'11.99',d2:'16',p2:'18.99'},
   {id:ssId++,student:'Sam',restaurant:"Pizza Hut",d1:'10',p1:'9.99',d2:'14',p2:'13.99'}
