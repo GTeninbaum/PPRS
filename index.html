@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>πr².com — Pizza Value Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --orange:#F4621F;--ol:#F97316;--od:#C2410C;
+  --cream:#FDF8EE;--dark:#1E2A3A;--gray:#6B7280;
+  --lg:#F3F4F6;--border:#E5E7EB;
+  --green:#16A34A;--gl:#DCFCE7;--gb:#86EFAC;
+  --blue:#2563EB;--bl:#EFF6FF;
+  --purple:#9333EA;--pl:#FAF5FF;--red:#DC2626;
+  --yellow:#F5C842;
+}
+body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh}
+nav{background:white;border-bottom:3px solid var(--orange);position:sticky;top:0;z-index:200;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{display:flex;align-items:center;gap:.4rem;font-size:1.25rem;font-weight:900;color:var(--dark);cursor:pointer}
+.logo .pi{color:var(--orange)}
+.navlinks{display:flex;gap:.15rem;flex-wrap:wrap}
+.nl{background:none;border:none;padding:.35rem .75rem;border-radius:8px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:700;color:var(--gray);display:flex;align-items:center;gap:.3rem;transition:all .15s}
+.nl:hover{background:var(--lg);color:var(--dark)}
+.nl.active{background:var(--orange);color:white}
+.page{display:none}.page.active{display:block}
+.ph{text-align:center;padding:2.5rem 1rem 1.75rem}
+.ph h1{font-size:2.5rem;font-weight:900;margin-bottom:.4rem}
+.ph p{color:var(--gray);font-size:1rem;font-weight:600}
+
+/* CALCULATOR */
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;max-width:900px;margin:0 auto 1.5rem;padding:0 1.5rem}
+.pcard{background:white;border-radius:16px;padding:1.75rem;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.pcard-head{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.5rem}
+.pic{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
+.pic.or{background:linear-gradient(135deg,#F97316,#EA580C)}
+.pic.am{background:linear-gradient(135deg,#F59E0B,#D97706)}
+.fg{margin-bottom:1.2rem}
+.fg label{display:block;font-size:.875rem;font-weight:800;margin-bottom:.35rem}
+.fg input{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:.6rem .85rem;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;color:var(--dark);outline:none;background:white;transition:border-color .15s}
+.fg input:focus{border-color:var(--orange)}
+.hint{font-size:.72rem;color:var(--gray);margin-top:.25rem;font-style:italic;font-weight:600}
+.cbw{display:flex;justify-content:center;padding:0 1.5rem 2rem}
+.cbtn{background:linear-gradient(135deg,var(--ol),var(--od));color:white;border:none;border-radius:50px;padding:.9rem 2.5rem;font-family:'Nunito',sans-serif;font-size:1.05rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:.5rem;box-shadow:0 4px 15px rgba(244,98,31,.4);transition:all .2s}
+.cbtn:hover{transform:translateY(-2px)}
+.results{max-width:900px;margin:0 auto 3rem;padding:0 1.5rem;display:none}
+.results.show{display:block}
+.wbanner{background:linear-gradient(135deg,#F97316,#DC2626);border-radius:16px;padding:1.5rem 2rem;display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+.wbanner .wbl{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.75);margin-bottom:.2rem}
+.wbanner .wbn{font-size:2rem;font-weight:900;color:white}
+.ysbox{background:rgba(255,255,255,.2);border-radius:10px;padding:.6rem 1rem;text-align:center}
+.ysbox .ysl{font-size:.62rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.8)}
+.ysbox .ysp{font-size:1.8rem;font-weight:900;color:white;line-height:1.1}
+.rg{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.25rem}
+.rc{background:white;border-radius:16px;padding:1.5rem;box-shadow:0 2px 12px rgba(0,0,0,.06);border:2px solid transparent}
+.rc.win{border-color:var(--green);background:var(--gl)}
+.rch{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.rcn{font-size:1rem;font-weight:800;display:flex;align-items:center;gap:.35rem}
+.wpill{background:var(--green);color:white;font-size:.7rem;font-weight:800;padding:.2rem .65rem;border-radius:20px}
+.sb{background:white;border:1.5px solid var(--border);border-radius:10px;padding:.9rem 1rem;margin-bottom:.75rem}
+.sb.pt{background:#faf5ff;border-color:#ddd6fe}
+.sb .sbl{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);margin-bottom:.2rem}
+.sb .sbv{font-size:1.6rem;font-weight:900;color:var(--dark)}
+.sb .sbs{font-size:.78rem;font-weight:600;color:var(--gray);margin-top:.1rem}
+.sb.pt .sbl{color:var(--purple)}
+.sb.pt .sbv{color:var(--purple)}
+.sb.pt .sbs{color:#7c3aed}
+.vcircles{display:flex;align-items:center;justify-content:center;gap:2rem;flex-wrap:wrap}
+.cw{text-align:center}
+.pcirc{border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto .75rem;position:relative}
+.wtag{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--green);color:white;font-size:.65rem;font-weight:800;padding:.15rem .5rem;border-radius:10px;white-space:nowrap}
+.cn{font-size:.95rem;font-weight:800}
+.cd{font-size:.8rem;font-weight:600;color:var(--gray)}
+.sarrow{font-size:1.5rem;color:var(--border);align-self:center}
+.srow{display:flex;justify-content:center;gap:.75rem;margin-bottom:1.25rem;flex-wrap:wrap}
+.sbtn{background:var(--blue);color:white;border:none;border-radius:50px;padding:.6rem 1.4rem;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:.4rem}
+.cpbtn{background:white;color:var(--dark);border:2px solid var(--border);border-radius:50px;padding:.6rem 1.4rem;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:.4rem}
+.vcard{background:white;border-radius:16px;padding:1.75rem;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:1.25rem;text-align:center}
+.vcard h3{font-size:1.05rem;font-weight:800;margin-bottom:1.5rem}
+/* calculator post-result BMC nudge */
+.calc-bmc{background:linear-gradient(135deg,#fff7ed,#fef3c7);border:1.5px solid #fed7aa;border-radius:14px;padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;margin-top:.5rem}
+.calc-bmc p{font-size:.85rem;font-weight:700;color:var(--dark)}
+.calc-bmc p span{color:var(--orange)}
+
+/* LEARN */
+.li{max-width:800px;margin:0 auto;padding:0 1.5rem 3rem}
+.lcallout{border:1.5px solid var(--orange);border-radius:14px;padding:.9rem 1.2rem;text-align:center;font-size:.92rem;font-weight:700;background:rgba(244,98,31,.04);margin-bottom:1.4rem}
+.lcard{border-radius:14px;padding:1.4rem;margin-bottom:1.2rem}
+.lcard.bl{background:#eff6ff;border:1.5px solid #bfdbfe}
+.lcard.gr{background:var(--gl);border:1.5px solid var(--gb)}
+.lcard.pu{background:var(--pl);border:1.5px solid #ddd6fe}
+.lcard h3{font-size:1.05rem;font-weight:900;margin-bottom:.9rem}
+.fbox{background:white;border-radius:10px;padding:1.2rem;text-align:center;margin-bottom:.9rem}
+.fbig{font-size:2rem;font-weight:900;margin-bottom:.2rem}
+.fsub{font-size:.82rem;font-weight:600;color:var(--gray)}
+.ll{list-style:none}
+.ll li{padding:.45rem 0;border-bottom:1px solid rgba(0,0,0,.06);font-size:.875rem;font-weight:600}
+.ll li:last-child{border-bottom:none}
+.lrg{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.lrc{border-radius:12px;padding:1rem;border:2px solid transparent}
+.lrc.lwin{border-color:var(--green);background:var(--gl)}
+.lrc.llos{background:var(--lg);border-color:var(--border)}
+.lrct{font-size:.8rem;font-weight:800;margin-bottom:.5rem}
+.lrr{font-size:.82rem;font-weight:600;margin-bottom:.25rem}
+.lrr.grn strong{color:var(--green)}
+.lverdict{background:var(--dark);color:white;border-radius:12px;padding:1rem 1.25rem;text-align:center;font-size:.9rem;font-weight:700;margin-top:1rem;line-height:1.6}
+.lverdict strong{color:var(--yellow)}
+.lcta{display:block;text-align:center;background:linear-gradient(135deg,var(--ol),var(--od));color:white;border:none;border-radius:50px;padding:.85rem 2.5rem;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:800;cursor:pointer;margin:1.75rem auto 0;max-width:280px;box-shadow:0 4px 15px rgba(244,98,31,.35)}
+.linputs{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:.75rem;margin-bottom:1rem}
+.lf label{display:block;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--gray);margin-bottom:.3rem}
+.lf input{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:.5rem .75rem;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:700;color:var(--dark);outline:none}
+.lf input:focus{border-color:var(--orange)}
+
+/* TEACHERS */
+.ti{max-width:960px;margin:0 auto;padding:0 1.5rem 3rem}
+.ttabs{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:1.5rem;border-bottom:2px solid var(--border);padding-bottom:.75rem}
+.ttab{background:none;border:none;padding:.45rem 1rem;border-radius:8px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;color:var(--gray);transition:all .15s}
+.ttab:hover{background:var(--lg);color:var(--dark)}
+.ttab.active{background:var(--orange);color:white}
+.tpanel{display:none}.tpanel.active{display:block}
+.tgc{border-radius:14px;padding:1.4rem;margin-bottom:1.2rem}
+.tgc.bl{background:#eff6ff;border:1.5px solid #bfdbfe}
+.tgc.gr{background:var(--gl);border:1.5px solid var(--gb)}
+.tgc.or{background:#fff7ed;border:1.5px solid #fed7aa}
+.tgc.pu{background:var(--pl);border:1.5px solid #ddd6fe}
+.tgc.wh{background:white;border:1.5px solid var(--border)}
+.tgc h3{font-size:1rem;font-weight:900;margin-bottom:.75rem}
+.tgintro{background:#f3f4f6;border-radius:10px;padding:.8rem 1.1rem;font-size:.88rem;font-weight:600;color:var(--gray);margin-bottom:1.25rem;line-height:1.6}
+.tgtl-item{border-radius:12px;padding:1.1rem 1.25rem;margin-bottom:.9rem;border-left:4px solid var(--orange)}
+.tgtl-item.bl{border-color:var(--blue);background:#eff6ff}
+.tgtl-item.gr{border-color:var(--green);background:var(--gl)}
+.tgtl-item.or{border-color:var(--orange);background:#fff7ed}
+.tgtl-item.pu{border-color:var(--purple);background:var(--pl)}
+.tgtl-item.ye{border-color:#f59e0b;background:#fefce8}
+.tgtl-item.gy{border-color:#6b7280;background:#f9fafb}
+.tgtl-time{font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);margin-bottom:.35rem}
+.tgtl-body h4{font-size:.9rem;font-weight:900;margin-bottom:.4rem}
+.tgtl-body p{font-size:.85rem;font-weight:600;line-height:1.6;margin-bottom:.4rem}
+.tgtl-body ul{list-style:none;padding-left:.25rem;margin:.3rem 0}
+.tgtl-body ul li{font-size:.83rem;font-weight:600;padding:.2rem 0;display:flex;align-items:flex-start;gap:.35rem}
+.tgtl-body ul li::before{content:"→";color:var(--orange);flex-shrink:0;font-weight:900}
+.ttip{background:rgba(0,0,0,.05);border-radius:8px;padding:.65rem .85rem;margin-top:.6rem;font-size:.82rem;font-weight:600;line-height:1.55}
+.ilink{background:none;border:1.5px solid var(--orange);border-radius:6px;color:var(--orange);font-family:'Nunito',sans-serif;font-size:.8rem;font-weight:800;cursor:pointer;padding:.1rem .5rem;display:inline;vertical-align:middle}
+.ilink:hover{background:var(--orange);color:white}
+.ovgrid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+.ovc{border-radius:12px;padding:1rem}
+.ovc.bl{background:#eff6ff;border:1.5px solid #bfdbfe}
+.ovc.gr{background:var(--gl);border:1.5px solid var(--gb)}
+.ovc.or{background:#fff7ed;border:1.5px solid #fed7aa}
+.ovc.pu{background:var(--pl);border:1.5px solid #ddd6fe}
+.ovc .ovi{font-size:1.4rem;margin-bottom:.4rem}
+.ovc h4{font-size:.875rem;font-weight:900;margin-bottom:.25rem}
+.ovc p{font-size:.8rem;font-weight:600;color:var(--gray);line-height:1.5}
+.objcard{background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:14px;padding:1.2rem;margin-bottom:1.2rem}
+.objcard h3{font-size:.95rem;font-weight:900;margin-bottom:.65rem}
+.objl{list-style:none}
+.objl li{padding:.3rem 0;font-size:.85rem;font-weight:600;display:flex;align-items:flex-start;gap:.35rem}
+.objl li::before{content:"•";color:var(--blue);font-weight:900;flex-shrink:0}
+.stdcard{background:var(--pl);border:1.5px solid #ddd6fe;border-radius:14px;padding:1.2rem;margin-bottom:1.2rem}
+.stdcard h3{font-size:.95rem;font-weight:900;margin-bottom:.65rem;color:var(--purple)}
+.stds{font-size:.82rem;font-weight:900;color:var(--purple);margin:.6rem 0 .25rem}
+.stdl{list-style:none}
+.stdl li{padding:.18rem 0;font-size:.8rem;font-weight:600;display:flex;align-items:flex-start;gap:.3rem}
+.stdl li::before{content:"•";color:var(--purple);font-weight:900;flex-shrink:0}
+.tipscard{background:#fefce8;border:1.5px solid #fde68a;border-radius:14px;padding:1.2rem;margin-bottom:1.4rem}
+.tipscard h3{font-size:.95rem;font-weight:900;margin-bottom:.65rem}
+.tipsl{list-style:none}
+.tipsl li{padding:.28rem 0;font-size:.85rem;font-weight:600;display:flex;align-items:flex-start;gap:.35rem;border-bottom:1px solid rgba(0,0,0,.05)}
+.tipsl li:last-child{border-bottom:none}
+.tipsl li::before{content:"•";color:#d97706;font-weight:900;flex-shrink:0;margin-top:.05rem}
+/* ss table */
+.sst{width:100%;border-collapse:collapse;font-size:.8rem;font-family:'Nunito',sans-serif;min-width:880px}
+.sst thead tr{background:var(--lg)}
+.sst th{padding:.5rem .6rem;text-align:left;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--gray);border-bottom:2px solid var(--border);white-space:nowrap}
+.sst th small{display:block;font-size:.65rem;text-transform:none;letter-spacing:0;font-weight:600}
+.sst td{padding:.3rem .5rem;border-bottom:1px solid var(--border);vertical-align:middle}
+.sst tbody tr:hover{background:#fffbf7}
+.ssi{width:100%;border:1px solid var(--border);border-radius:6px;padding:.3rem .5rem;font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:600;color:var(--dark);outline:none;background:white;min-width:60px}
+.ssi:focus{border-color:var(--orange);background:#fffbf7}
+.ssn{max-width:70px}
+.ssc{font-size:.82rem;font-weight:700;white-space:nowrap;padding:.3rem .6rem}
+.gcc{color:#15803d;background:#f0fdf4}
+.bcc{color:#1d4ed8;background:#eff6ff}
+.ssdel{background:none;border:1px solid var(--border);border-radius:6px;color:var(--gray);cursor:pointer;font-size:.75rem;padding:.2rem .45rem;font-family:'Nunito',sans-serif;font-weight:700}
+.ssdel:hover{border-color:var(--red);color:var(--red);background:#fef2f2}
+.ssbtn{border:none;border-radius:8px;padding:.4rem .85rem;font-family:'Nunito',sans-serif;font-size:.8rem;font-weight:800;cursor:pointer;white-space:nowrap}
+.ssbtn.or{background:var(--orange);color:white}
+.ssbtn.gr{background:var(--green);color:white}
+.ssbtn.re{background:#fee2e2;color:var(--red)}
+.sssum{padding:.75rem 1.25rem;border-top:1px solid var(--border);font-size:.8rem;font-weight:700;color:var(--gray);display:none}
+/* graph sub-tabs */
+.gtabs{display:flex;gap:.5rem;margin-bottom:1.25rem;flex-wrap:wrap}
+.gtab{background:white;border:2px solid var(--border);border-radius:10px;padding:.45rem 1rem;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;color:var(--gray);cursor:pointer;transition:all .15s}
+.gtab:hover{border-color:var(--orange);color:var(--orange)}
+.gtab.active{background:var(--orange);border-color:var(--orange);color:white}
+.gpanel{display:none}.gpanel.active{display:block}
+.tgbtns{display:flex;gap:.6rem;flex-wrap:wrap}
+.pbtn{background:var(--orange);color:white;border:none;border-radius:10px;padding:.55rem 1.2rem;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:.35rem}
+.pbtnw{display:flex;justify-content:flex-end;margin-bottom:1rem}
+.trc2{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.4rem}
+.trc{background:white;border-radius:14px;padding:1.2rem;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.trc.ot{background:#fff7ed;border:1.5px solid #fed7aa}
+.trc.dt{background:#f9fafb;border:1.5px solid #e5e7eb}
+.trch{display:flex;align-items:center;gap:.7rem;margin-bottom:.65rem}
+.trch h3{font-size:.95rem;font-weight:900}
+.trc p{font-size:.8rem;font-weight:600;color:var(--gray);margin-bottom:.9rem;line-height:1.5}
+.tic{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.tic.gr{background:var(--green)}.tic.or{background:linear-gradient(135deg,#f97316,#ea580c)}.tic.dk{background:var(--dark)}
+.obtn{width:100%;background:linear-gradient(135deg,#f97316,#c2410c);color:white;border:none;border-radius:50px;padding:.7rem;font-family:'Nunito',sans-serif;font-size:.875rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.35rem}
+.dbtn{width:100%;background:var(--dark);color:white;border:none;border-radius:50px;padding:.7rem;font-family:'Nunito',sans-serif;font-size:.875rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.35rem}
+/* teacher email capture */
+.email-capture{background:linear-gradient(135deg,#1e2a3a,#2d3f55);border-radius:16px;padding:1.75rem 2rem;margin-bottom:1.5rem;text-align:center}
+.email-capture h3{font-size:1.2rem;font-weight:900;color:white;margin-bottom:.35rem}
+.email-capture p{font-size:.875rem;font-weight:600;color:rgba(255,255,255,.7);margin-bottom:1.1rem;line-height:1.6}
+.email-row{display:flex;gap:.6rem;max-width:480px;margin:0 auto}
+.email-row input{flex:1;border:none;border-radius:10px;padding:.65rem 1rem;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:600;color:var(--dark);outline:none}
+.email-row input:focus{box-shadow:0 0 0 2px var(--ol)}
+.email-sub{background:linear-gradient(135deg,var(--ol),var(--od));color:white;border:none;border-radius:10px;padding:.65rem 1.25rem;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;white-space:nowrap}
+.email-sub:hover{opacity:.9}
+.email-success{display:none;background:var(--gl);border:1.5px solid var(--gb);border-radius:10px;padding:.75rem 1rem;font-size:.875rem;font-weight:700;color:var(--green);margin-top:.75rem;max-width:480px;margin-left:auto;margin-right:auto}
+.email-fine{font-size:.72rem;color:rgba(255,255,255,.45);margin-top:.65rem}
+/* TPT / monetization */
+.tpt-banner{background:linear-gradient(135deg,#ff6d00,#ff9100);border-radius:16px;padding:1.5rem 2rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.tpt-banner .tpt-left h3{font-size:1.05rem;font-weight:900;color:white;margin-bottom:.25rem}
+.tpt-banner .tpt-left p{font-size:.82rem;font-weight:600;color:rgba(255,255,255,.8);line-height:1.5}
+.tpt-btn{background:white;color:#ff6d00;border:none;border-radius:50px;padding:.65rem 1.5rem;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:900;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.tpt-btn:hover{background:#fff3e0}
+
+/* WORKSHEET */
+.wi{max-width:820px;margin:0 auto;padding:0 1.5rem 3rem}
+.wsh{background:linear-gradient(135deg,#f97316,#ea580c);border-radius:16px;padding:2rem;text-align:center;margin-bottom:1.5rem}
+.wsh h1{font-family:'Fredoka One',sans-serif;font-size:2rem;color:white;margin-bottom:.4rem}
+.wsh p{font-size:.95rem;font-weight:700;color:rgba(255,255,255,.85)}
+.wscard{background:white;border-radius:14px;padding:1.25rem 1.5rem;margin-bottom:1rem;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.wsnd{display:flex;gap:2rem;font-size:.9rem;font-weight:700}
+.wsblank{display:inline-block;border-bottom:2px solid var(--dark);min-width:120px;margin-left:.35rem}
+.wsmiss{background:#fff7ed;border-left:4px solid var(--orange);border-radius:0 10px 10px 0;padding:.9rem 1.2rem;margin-bottom:1rem}
+.wsmiss h3{font-size:.9rem;font-weight:900;color:var(--orange);margin-bottom:.35rem}
+.wsmiss p{font-size:.875rem;font-weight:600;line-height:1.6}
+.wsps{border:2px dashed var(--orange);border-radius:14px;padding:1.25rem;margin-bottom:1rem;background:#fff9f5}
+.wsps h3{font-size:1rem;font-weight:900;color:var(--orange);margin-bottom:1rem;font-family:'Fredoka One',sans-serif}
+.wsfl{margin-bottom:.65rem;font-size:.875rem;font-weight:700}
+.wsfl .wsblank{min-width:140px}
+.wswb{background:white;border-radius:10px;padding:1rem 1.25rem;margin-top:.9rem}
+.wswb h4{font-size:.85rem;font-weight:900;color:var(--orange);margin-bottom:.75rem}
+.wscr{font-size:.85rem;font-weight:700;margin-bottom:.6rem;display:flex;align-items:center;flex-wrap:wrap;gap:.25rem}
+.wscr .wsblank{min-width:130px}
+.wscr .wsc{color:var(--orange);font-weight:900}
+.wsbetter{background:#d1fae5;border-radius:14px;padding:1.25rem;text-align:center;margin-bottom:1rem}
+.wsbetter h3{font-size:1rem;font-weight:900;color:var(--green);margin-bottom:.5rem}
+.wsbetter p{font-size:.875rem;font-weight:700;margin-bottom:.35rem}
+.wseline{border-bottom:2px solid var(--green);margin:.5rem auto 0;width:80%}
+.wsref{background:#e0e7ff;border-radius:14px;padding:1.25rem;margin-bottom:1rem}
+.wsref h3{font-size:.95rem;font-weight:900;color:#4338ca;margin-bottom:1rem}
+.wsq{font-size:.875rem;font-weight:800;color:#1e1b4b;margin-bottom:.5rem}
+.wslines{margin-bottom:1rem}
+.wsline{border-bottom:1.5px solid #818cf8;margin-bottom:.55rem;height:22px}
+.wsfoot{background:#fef9c3;border:1.5px solid #fde68a;border-radius:14px;padding:1.25rem;text-align:center;margin-bottom:1rem}
+.wsfoot p{font-size:.875rem;font-weight:700}
+.wsfoot a{color:var(--orange);font-weight:900;cursor:pointer}
+
+/* LIMITS */
+.limi{max-width:900px;margin:0 auto;padding:0 1.5rem 3rem}
+.limhl{background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:14px;padding:1.2rem 1.5rem;margin-bottom:1.4rem}
+.limhl h3{font-size:.95rem;font-weight:900;margin-bottom:.35rem}
+.limhl p{font-size:.875rem;font-weight:600;color:var(--gray);line-height:1.6}
+.limgrid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.4rem}
+.limc{background:white;border-radius:14px;padding:1.2rem;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.limc h4{font-size:.9rem;font-weight:900;margin-bottom:.4rem}
+.limc p{font-size:.8rem;font-weight:600;color:var(--gray);line-height:1.5}
+.taste{background:var(--gl);border:1.5px solid var(--gb);border-radius:14px;padding:1.2rem 1.5rem;margin-bottom:2rem;text-align:center}
+.taste h3{font-size:.95rem;font-weight:900;margin-bottom:.35rem}
+.taste p{font-size:.875rem;font-weight:600;color:var(--gray);line-height:1.6}
+.pcta{display:block;margin:0 auto;background:linear-gradient(135deg,#9333ea,#7c3aed);color:white;border:none;border-radius:50px;padding:.85rem 2.5rem;max-width:320px;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:800;cursor:pointer;box-shadow:0 4px 15px rgba(147,51,234,.35)}
+
+/* FOOTER */
+footer{background:var(--dark);color:white;padding:2.5rem 1.5rem}
+.footer-inner{max-width:900px;margin:0 auto}
+.footer-top{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2rem;margin-bottom:2rem}
+.footer-col h4{font-size:.875rem;font-weight:900;color:white;margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.08em}
+.footer-col p{font-size:.8rem;font-weight:600;color:rgba(255,255,255,.55);line-height:1.6;margin-bottom:.5rem}
+.footer-col a{display:block;font-size:.82rem;font-weight:700;color:rgba(255,255,255,.6);text-decoration:none;margin-bottom:.35rem;transition:color .15s;cursor:pointer}
+.footer-col a:hover{color:var(--orange)}
+.footer-divider{border-top:1px solid rgba(255,255,255,.1);padding-top:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.footer-logo{font-size:1.1rem;font-weight:900;color:white;display:flex;align-items:center;gap:.4rem}
+.footer-logo .pi{color:var(--orange)}
+.footer-tagline{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.4)}
+.footer-btns{display:flex;gap:.6rem;flex-wrap:wrap}
+.bmcbtn{display:inline-flex;align-items:center;gap:.4rem;background:#FFDD00;color:#1a1a1a;border:none;border-radius:8px;padding:.45rem 1rem;font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:900;cursor:pointer;transition:all .15s}
+.bmcbtn:hover{background:#ffe733;transform:translateY(-1px)}
+.tptfootbtn{display:inline-flex;align-items:center;gap:.4rem;background:#ff6d00;color:white;border:none;border-radius:8px;padding:.45rem 1rem;font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:900;cursor:pointer;transition:all .15s}
+.tptfootbtn:hover{background:#ff8c00;transform:translateY(-1px)}
+
+.notif{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--dark);color:white;padding:.7rem 1.2rem;border-radius:12px;font-size:.82rem;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.2);transform:translateY(100px);opacity:0;transition:all .3s;z-index:999}
+.notif.show{transform:translateY(0);opacity:1}
+
+@media print{
+  nav,footer,.notif,.ttabs,.gtabs,.ssbtn,.pbtnw,.ilink,.email-capture,.tpt-banner,.calc-bmc{display:none!important}
+  body{background:white!important}
+  .page{display:none!important}
+  #page-teachers{display:block!important}
+  .tpanel{display:none!important}
+  #tp-worksheet{display:block!important}
+  .wi{padding:0;max-width:100%}
+  .wsh{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .wsref,.wsbetter{-webkit-print-color-adjust:exact;print-color-adjust:exact;break-inside:avoid}
+  @page{margin:1.5cm;size:letter}
+}
+@media(max-width:640px){
+  .calc-grid,.rg,.trc2,.limgrid,.linputs,.ovgrid,.footer-top{grid-template-columns:1fr}
+  .ph h1{font-size:1.9rem}
+  nav{padding:0 .75rem}
+  .nl .lbl{display:none}
+  .lrg{grid-template-columns:1fr}
+  .email-row{flex-direction:column}
+  .footer-top{gap:1.25rem}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo" onclick="showPage('calc')"><span>🍕</span><span><span class="pi">πr²</span>.com</span></div>
+  <div class="navlinks">
+    <button class="nl active" id="nav-calc" onclick="showPage('calc')">🧮 <span class="lbl">Calculator</span></button>
+    <button class="nl" id="nav-learn" onclick="showPage('learn')">📖 <span class="lbl">Learn</span></button>
+    <button class="nl" id="nav-teachers" onclick="showPage('teachers')">🎓 <span class="lbl">Teachers</span></button>
+    <button class="nl" id="nav-limits" onclick="showPage('limits')">⚠️ <span class="lbl">Limits</span></button>
+  </div>
+</nav>
+
+<!-- CALCULATOR -->
+<div class="page active" id="page-calc">
+  <div class="ph"><h1>Enter Your Pizza Details</h1><p>We'll calculate how much pizza you're getting for your money</p></div>
+  <div class="calc-grid">
+    <div class="pcard">
+      <div class="pcard-head"><div class="pic or">🍕</div><div><h2 style="font-size:1.15rem;font-weight:800">Large Pizza</h2><p class="hint" style="margin-top:.1rem">Enter your pizza's details below</p></div></div>
+      <div class="fg"><label>Diameter (inches)</label><input type="number" id="ld" value="16" min="1" max="48" step="0.5"><div class="hint">Example: 16" — replace with your pizza's size</div></div>
+      <div class="fg"><label>Price ($)</label><input type="number" id="lp" value="18.99" min="0" step="0.01"><div class="hint">Example: $18.99 — replace with your pizza's price</div></div>
+    </div>
+    <div class="pcard">
+      <div class="pcard-head"><div class="pic am">🍕</div><div><h2 style="font-size:1.15rem;font-weight:800">Small Pizza</h2><p class="hint" style="margin-top:.1rem">Enter your pizza's details below</p></div></div>
+      <div class="fg"><label>Diameter (inches)</label><input type="number" id="sd" value="12" min="1" max="48" step="0.5"><div class="hint">Example: 12" — replace with your pizza's size</div></div>
+      <div class="fg"><label>Price ($)</label><input type="number" id="sp" value="12.99" min="0" step="0.01"><div class="hint">Example: $12.99 — replace with your pizza's price</div></div>
+    </div>
+  </div>
+  <div class="cbw"><button class="cbtn" onclick="doCalc()">🧮 Calculate Best Deal!</button></div>
+  <div class="results" id="results">
+    <div class="wbanner"><div class="winner-left"><div class="wbl">BEST DEAL WINNER! 🎉</div><div class="wbn" id="wname">Large Pizza</div></div><div class="ysbox"><div class="ysl">YOU SAVE</div><div class="ysp" id="ysave">0%</div></div></div>
+    <div class="rg" id="rcards"></div>
+    <div class="vcard"><h3>Visual Size Comparison 👀</h3><div class="vcircles" id="vcircles"></div></div>
+    <div class="srow">
+      <button class="sbtn" onclick="doShare()">🔗 Share Your Savings!</button>
+      <button class="cpbtn" onclick="doCopy()">📋 Copy Link</button>
+    </div>
+    <div class="calc-bmc">
+      <p>🍕 Did this just save you money? <span>Buy us a coffee!</span></p>
+      <button class="bmcbtn" onclick="window.open('https://buymeacoffee.com','_blank')">☕ Buy Me a Coffee</button>
+    </div>
+  </div>
+</div>
+
+<!-- LEARN -->
+<div class="page" id="page-learn">
+  <div class="ph"><h1>The Math Behind the Pizza</h1><p>Why geometry matters when buying pizza</p></div>
+  <div class="li">
+    <div class="lcallout">Ever wonder why one large pizza beats two mediums? It all comes down to geometry — and price. 🍕 Try it below!</div>
+    <div class="tgc wh" style="padding:1.5rem;margin-bottom:1.4rem">
+      <h3>🔢 Try It: Enter Any Two Pizzas</h3>
+      <div class="linputs">
+        <div class="lf"><label>Pizza A — Diameter</label><input type="number" id="lad" value="16" min="1" max="48" step="0.5" oninput="learnCalc()"></div>
+        <div class="lf"><label>Pizza A — Price ($)</label><input type="number" id="lap" value="18.99" min="0" step="0.01" oninput="learnCalc()"></div>
+        <div class="lf"><label>Pizza B — Diameter</label><input type="number" id="lbd" value="12" min="1" max="48" step="0.5" oninput="learnCalc()"></div>
+        <div class="lf"><label>Pizza B — Price ($)</label><input type="number" id="lbp" value="12.99" min="0" step="0.01" oninput="learnCalc()"></div>
+      </div>
+      <div id="lresult"></div>
+    </div>
+    <div class="lcard bl">
+      <h3>The magic formula</h3>
+      <div class="fbox"><div class="fbig">A = πr²</div><div class="fsub">Area = 3.14 × (radius × radius)</div></div>
+      <ul class="ll">
+        <li><strong>π (Pi)</strong> ≈ 3.14159… — the ratio of a circle's circumference to its diameter.</li>
+        <li><strong>r (Radius)</strong> = Half the diameter. A 16" pizza has an 8" radius.</li>
+        <li><strong>r²</strong> = Radius squared. For 8": 8 × 8 = 64</li>
+        <li><strong>A = πr²</strong> = 3.14159 × 64 ≈ <strong>201 sq in</strong></li>
+      </ul>
+    </div>
+    <div class="lcard pu">
+      <h3>The Pizzabyte System™</h3>
+      <p style="font-size:.875rem;font-weight:600;margin-bottom:.5rem;line-height:1.6">We measure pizza in <span style="color:var(--purple);font-weight:800">Pizzabytes</span> — each is 3 sq in (about one bite).</p>
+      <p style="font-size:.85rem;font-weight:600;margin-bottom:.25rem">A 16" pizza = 67 Pizzabytes &nbsp;|&nbsp; A 12" pizza = 38 Pizzabytes</p>
+      <p style="font-size:.85rem;font-weight:600;color:var(--gray);line-height:1.6;margin-top:.5rem">This makes comparing deals super easy: you see how many bites you get for your dollar!</p>
+    </div>
+    <button class="lcta" onclick="showPage('calc')">Try the full calculator →</button>
+  </div>
+</div>
+
+<!-- TEACHERS -->
+<div class="page" id="page-teachers">
+  <div class="ph"><h1>🎓 Teacher Hub</h1><p>Lesson plan, data tools, live graphs, worksheet, and standards — all in one place</p></div>
+  <div class="ti">
+
+    <!-- TPT Banner -->
+    <div class="tpt-banner">
+      <div class="tpt-left">
+        <h3>📦 Download the Full Activity Bundle</h3>
+        <p>Worksheet, answer key, rubric, extension problems, and teacher guide — ready to print and teach. Available on Teachers Pay Teachers.</p>
+      </div>
+      <button class="tpt-btn" onclick="window.open('https://teacherspayteachers.com','_blank')">Get it on TPT →</button>
+    </div>
+
+    <!-- Email capture -->
+    <div class="email-capture">
+      <h3>📬 Get New Math Activities in Your Inbox</h3>
+      <p>Join math teachers getting real-world lesson ideas. No spam — just practical activities like this one, free.</p>
+      <div class="email-row">
+        <input type="email" id="email-input" placeholder="yourname@school.edu">
+        <button class="email-sub" onclick="emailSignup()">Subscribe Free</button>
+      </div>
+      <div class="email-success" id="email-success">🎉 You're in! Watch your inbox for the next activity.</div>
+      <p class="email-fine">Unsubscribe any time. We never share your email.</p>
+    </div>
+
+    <div class="ttabs">
+      <button class="ttab active" id="tt-overview" onclick="showTab('overview')">📋 Overview</button>
+      <button class="ttab" id="tt-lesson" onclick="showTab('lesson')">⏱ Lesson Plan</button>
+      <button class="ttab" id="tt-data" onclick="showTab('data')">📊 Class Data</button>
+      <button class="ttab" id="tt-graph" onclick="showTab('graph')">📈 Graphs</button>
+      <button class="ttab" id="tt-analysis" onclick="showTab('analysis')">🔍 Analysis</button>
+      <button class="ttab" id="tt-worksheet" onclick="showTab('worksheet')">📄 Worksheet</button>
+      <button class="ttab" id="tt-standards" onclick="showTab('standards')">📚 Standards</button>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="tpanel active" id="tp-overview">
+      <div class="trc2">
+        <div class="trc ot"><div class="trch"><div class="tic or">📄</div><h3>Student Worksheet</h3></div><p>Printable activity sheet — no PDF needed, prints straight from the browser.</p><button class="obtn" onclick="showTab('worksheet')">📄 View &amp; Print Worksheet</button></div>
+        <div class="trc dt"><div class="trch"><div class="tic dk">🖨️</div><h3>Print Teacher Guide</h3></div><p>Opens a clean formatted document with the full lesson plan, instructions, and standards.</p><button class="dbtn" onclick="printGuide()">🖨️ Print Teacher Guide</button></div>
+      </div>
+      <div class="objcard"><h3>📚 Learning Objectives</h3><ul class="objl"><li>Apply A = πr² to calculate the area of a circle</li><li>Compute and compare unit rates (cost per square inch)</li><li>Understand how area scales non-linearly with diameter</li><li>Collect, organize, and interpret real-world data</li><li>Create and read scatter plots, bar charts, and area diagrams</li><li>Make evidence-based consumer decisions</li></ul></div>
+      <div class="ovgrid">
+        <div class="ovc bl"><div class="ovi">👥</div><h4>Best for</h4><p>Grades 6–9 · 60–90 min · Math, Consumer Ed, Data Science</p></div>
+        <div class="ovc gr"><div class="ovi">🛠️</div><h4>Materials</h4><p>Worksheet (Worksheet tab) · Calculator · All graphs and data tools built into this page</p></div>
+        <div class="ovc or"><div class="ovi">📱</div><h4>Tech needed</h4><p>1 device to project this site — no Google Sheets or external tools required</p></div>
+        <div class="ovc pu"><div class="ovi">💡</div><h4>Big idea</h4><p>A pizza's value isn't about size — it's about area. π makes larger pizzas an exponentially better deal.</p></div>
+      </div>
+    </div>
+
+    <!-- LESSON PLAN -->
+    <div class="tpanel" id="tp-lesson">
+      <div class="tgintro">A complete 60-minute lesson. All tools referenced below are built into this page — click the inline links to jump directly to each one.</div>
+      <div class="tgtl-item or"><div class="tgtl-time">0–10 min</div><div class="tgtl-body"><h4>🎯 Hook: The Pizza Question</h4><p>Ask: <em>"If a 12" pizza costs $12 and a 16" pizza costs $16 — which is the better deal?"</em> Take a show of hands. Most students say they're equal ($1/inch). Then reveal: you need to think about <strong>area, not diameter</strong>.</p><div class="ttip">💡 Use the <button class="ilink" onclick="showTab('graph');setTimeout(function(){showGTab('circles')},100)">📐 Circle Diagram</button> to show the visual immediately — students are always surprised how much bigger the large pizza is.</div></div></div>
+      <div class="tgtl-item bl"><div class="tgtl-time">10–20 min</div><div class="tgtl-body"><h4>📖 Mini-Lesson: A = πr²</h4><p>Walk through the formula using the <strong>Learn tab</strong>. Key steps:</p><ul><li>Diameter vs. radius — always halve first</li><li>Square the radius (8 × 8 = 64)</li><li>Multiply by π ≈ 3.14159</li><li>12" → 113 sq in, 16" → 201 sq in = <strong>78% more pizza</strong></li></ul><div class="ttip">💡 <strong>Common error:</strong> Students use diameter instead of radius. Have them write "÷ 2 first" on their worksheet.</div></div></div>
+      <div class="tgtl-item gr"><div class="tgtl-time">20–35 min</div><div class="tgtl-body"><h4>📝 Data Collection &amp; Calculation</h4><p>Hand out the <button class="ilink" onclick="showTab('worksheet')">📄 Student Worksheet</button>. Students research two real pizza sizes from a local restaurant and complete all five calculations by hand:</p><ul><li>Radius (diameter ÷ 2)</li><li>Area (π × r²)</li><li>Cost per square inch (price ÷ area)</li><li>Pizzabytes™ (area ÷ 3)</li><li>Cost per Pizzabyte</li></ul><div class="ttip">💡 <strong>Differentiation:</strong> Calculators for on-grade. Advanced: compute by hand. Struggling: use Pizzabytes (friendlier whole numbers).</div></div></div>
+      <div class="tgtl-item pu"><div class="tgtl-time">35–45 min</div><div class="tgtl-body"><h4>✅ Verification &amp; Class Data Entry</h4><p>Students verify using the <strong>Calculator tab</strong>. Then collect class data using the <button class="ilink" onclick="showTab('data')">📊 Class Data Spreadsheet</button> — project it and have each student add their row. Area and ¢/in² calculate automatically.</p><div class="ttip">💡 Project the live spreadsheet on the board. The class stats bar updates in real time as rows are added.</div></div></div>
+      <div class="tgtl-item ye"><div class="tgtl-time">45–55 min</div><div class="tgtl-body"><h4>📈 Live Graphing</h4><p>Switch to the <button class="ilink" onclick="showTab('graph')">📈 Graphs tab</button> and build all three graphs live:</p><ul><li><button class="ilink" onclick="showTab('graph');setTimeout(function(){showGTab('bar')},100)">📊 Bar Chart</button> — side-by-side cost/in² comparison. Shortest bar = best value.</li><li><button class="ilink" onclick="showTab('graph');setTimeout(function(){showGTab('scatter')},100)">📈 Scatter Plot</button> — diameter vs. cost/in². Does bigger always mean cheaper?</li><li><button class="ilink" onclick="showTab('graph');setTimeout(function(){showGTab('circles')},100)">📐 Circle Diagram</button> — proportional area circles. The visual that surprises students most.</li></ul><div class="ttip">💡 Graphs pull from the Class Data tab automatically — no re-entry needed. Project each one and let students interpret before you explain.</div></div></div>
+      <div class="tgtl-item gy"><div class="tgtl-time">55–60 min</div><div class="tgtl-body"><h4>✍️ Reflection &amp; Wrap-Up</h4><p>Students complete the three reflection questions on the worksheet. Close with question 1: "Why does area matter more than diameter?" — the correct answer: area grows with the <em>square</em> of the radius, so doubling the diameter quadruples the area.</p><div class="ttip">💡 <strong>Exit ticket:</strong> "A 14" pizza costs $15. What is its cost per sq in?" (≈ $0.097) Use the <button class="ilink" onclick="showTab('analysis')">🔍 Analysis tab</button> for deeper discussion prompts.</div></div></div>
+    </div>
+
+    <!-- CLASS DATA -->
+    <div class="tpanel" id="tp-data">
+      <div class="tgintro">Enter class pizza data here — no Google Sheets needed. Area and ¢/in² calculate automatically. The Graphs tab reads directly from this data.</div>
+      <div class="tgc wh" style="padding:0;overflow:hidden;margin-bottom:1.25rem">
+        <div style="background:var(--dark);padding:.9rem 1.25rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem">
+          <div style="color:white;font-size:1rem;font-weight:900">📊 Class Pizza Data Spreadsheet</div>
+          <div class="tgbtns">
+            <button class="ssbtn or" onclick="ssAdd()">+ Add Row</button>
+            <button class="ssbtn gr" onclick="ssPrint()">🖨️ Print Table</button>
+            <button class="ssbtn re" onclick="ssClear()">🗑 Clear All</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="sst" id="sst">
+            <thead><tr>
+              <th style="width:100px">Student</th>
+              <th style="width:120px">Restaurant</th>
+              <th style="width:75px">Size 1<br><small>(inches)</small></th>
+              <th style="width:72px">Price 1<br><small>($)</small></th>
+              <th style="width:85px">Area 1<br><small>(sq in)</small></th>
+              <th style="width:85px">c/in² (1)</th>
+              <th style="width:75px">Size 2<br><small>(inches)</small></th>
+              <th style="width:72px">Price 2<br><small>($)</small></th>
+              <th style="width:85px">Area 2<br><small>(sq in)</small></th>
+              <th style="width:85px">c/in² (2)</th>
+              <th style="width:95px">Better Deal</th>
+              <th style="width:36px"></th>
+            </tr></thead>
+            <tbody id="sstbody"></tbody>
+          </table>
+        </div>
+        <div class="sssum" id="sssum"></div>
+      </div>
+      <div class="tgc bl"><h3>📋 How to Use This</h3><ul class="objl"><li>Click <strong>+ Add Row</strong> for each student or pair. Columns auto-calculate as you type.</li><li>Area and c/in² fill in automatically — no formulas to enter.</li><li>The Better Deal column highlights the winner for each restaurant.</li><li>Switch to the <strong>Graphs tab</strong> to see live bar charts, scatter plots, and circle diagrams built from this data.</li><li>Use <strong>Print Table</strong> to save a clean copy for your records.</li></ul></div>
+    </div>
+
+    <!-- GRAPHS -->
+    <div class="tpanel" id="tp-graph">
+      <div class="tgintro">Three live graphs built from your Class Data. Enter data in the Class Data tab first — graphs update automatically.</div>
+      <div class="gtabs">
+        <button class="gtab active" id="gt-bar" onclick="showGTab('bar')">📊 Bar Chart</button>
+        <button class="gtab" id="gt-scatter" onclick="showGTab('scatter')">📈 Scatter Plot</button>
+        <button class="gtab" id="gt-circles" onclick="showGTab('circles')">📐 Circle Diagram</button>
+      </div>
+      <div class="gpanel active" id="gp-bar">
+        <div class="tgc wh" style="margin-bottom:1rem">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.75rem;margin-bottom:1rem"><div><h3 style="margin-bottom:.25rem">📊 Cost per Square Inch by Restaurant</h3><p style="font-size:.8rem;font-weight:600;color:var(--gray)">Shorter bar = better value. Green = Size 1, Blue = Size 2.</p></div><button class="ssbtn or" onclick="drawBar()">↺ Refresh</button></div>
+          <div id="g-bar" style="overflow-x:auto;min-height:180px"></div>
+        </div>
+        <div class="tgc or"><h3>What to discuss</h3><ul class="objl"><li>Which restaurant has the shortest bar? That's the class best deal.</li><li>Is Size 2 (larger) almost always shorter? Were there exceptions?</li><li>Why might some restaurants price their large pizza at a premium?</li></ul></div>
+      </div>
+      <div class="gpanel" id="gp-scatter">
+        <div class="tgc wh" style="margin-bottom:1rem">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.75rem;margin-bottom:1rem"><div><h3 style="margin-bottom:.25rem">📈 Diameter vs. Cost per Square Inch</h3><p style="font-size:.8rem;font-weight:600;color:var(--gray)">Each dot is one pizza. A downward trend means bigger = cheaper per sq in.</p></div><button class="ssbtn or" onclick="drawScatter()">↺ Refresh</button></div>
+          <div id="g-scatter" style="overflow-x:auto;min-height:180px"></div>
+        </div>
+        <div class="tgc bl"><h3>What to discuss</h3><ul class="objl"><li>Does the trend line slope downward? (It should — bigger pizzas are usually cheaper per sq in.)</li><li>Are there any outliers far from the trend? Why might that restaurant be different?</li><li>Could you predict the cost/in² of a 20" pizza based on the trend?</li></ul></div>
+      </div>
+      <div class="gpanel" id="gp-circles">
+        <div class="tgc wh" style="margin-bottom:1rem">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.75rem;margin-bottom:1rem"><div><h3 style="margin-bottom:.25rem">📐 Proportional Circle Diagram</h3><p style="font-size:.8rem;font-weight:600;color:var(--gray)">Each circle drawn to scale. The visual is always more dramatic than students expect.</p></div><button class="ssbtn or" onclick="drawCircles()">↺ Refresh</button></div>
+          <div id="g-circles" style="overflow-x:auto;min-height:180px"></div>
+          <div style="margin-top:.75rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
+            <label style="font-size:.78rem;font-weight:800;color:var(--gray)">ADD CUSTOM:</label>
+            <input type="number" id="cadd-d" placeholder="Diameter (in)" min="1" max="40" step="0.5" style="border:1.5px solid var(--border);border-radius:8px;padding:.3rem .6rem;font-family:'Nunito',sans-serif;font-size:.85rem;width:115px">
+            <input type="text" id="cadd-l" placeholder="Label" style="border:1.5px solid var(--border);border-radius:8px;padding:.3rem .6rem;font-family:'Nunito',sans-serif;font-size:.85rem;width:100px">
+            <button class="ssbtn gr" onclick="circleAdd()">+ Add</button>
+            <button class="ssbtn re" onclick="circleCustom=[];drawCircles()">Clear</button>
+          </div>
+        </div>
+        <div class="tgc gr"><h3>What to discuss</h3><ul class="objl"><li>A 16" pizza looks only 33% wider than a 12" — but has 78% more area. The linear view misleads.</li><li>Ask: "Does this look twice as big?" Then show the actual area numbers.</li><li>Try adding a 20" pizza. How much more area does it have than a 12"?</li></ul></div>
+      </div>
+    </div>
+
+    <!-- ANALYSIS -->
+    <div class="tpanel" id="tp-analysis">
+      <div class="tgintro">Guiding students from raw data to conclusions. These prompts work with any class dataset.</div>
+      <div class="tgc bl"><h3>🔢 Basic Statistics: What to Calculate</h3>
+        <p style="font-size:.875rem;font-weight:600;margin-bottom:.75rem;line-height:1.6">Once class data is complete, have students compute:</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
+          <div style="background:white;border-radius:10px;padding:.9rem;border:1.5px solid var(--border)"><div style="font-size:.85rem;font-weight:900;margin-bottom:.25rem">Mean cost/in²</div><div style="font-size:.8rem;color:var(--orange);font-weight:700;margin-bottom:.2rem">Sum of all costs ÷ number of pizzas</div><div style="font-size:.78rem;color:var(--gray);font-weight:600">What does a "normal" pizza cost in your area?</div></div>
+          <div style="background:white;border-radius:10px;padding:.9rem;border:1.5px solid var(--border)"><div style="font-size:.85rem;font-weight:900;margin-bottom:.25rem">Range</div><div style="font-size:.8rem;color:var(--orange);font-weight:700;margin-bottom:.2rem">Highest − Lowest cost/in²</div><div style="font-size:.78rem;color:var(--gray);font-weight:600">Large range = big differences in value</div></div>
+          <div style="background:white;border-radius:10px;padding:.9rem;border:1.5px solid var(--border)"><div style="font-size:.85rem;font-weight:900;margin-bottom:.25rem">Median</div><div style="font-size:.8rem;color:var(--orange);font-weight:700;margin-bottom:.2rem">Middle value when sorted low to high</div><div style="font-size:.78rem;color:var(--gray);font-weight:600">More robust than mean — ignores outliers</div></div>
+          <div style="background:white;border-radius:10px;padding:.9rem;border:1.5px solid var(--border)"><div style="font-size:.85rem;font-weight:900;margin-bottom:.25rem">% where larger wins</div><div style="font-size:.8rem;color:var(--orange);font-weight:700;margin-bottom:.2rem">Larger wins ÷ total × 100</div><div style="font-size:.78rem;color:var(--gray);font-weight:600">Is the large always the better deal?</div></div>
+        </div>
+      </div>
+      <div class="tgc gr"><h3>🔍 Discussion Questions</h3>
+        <div style="display:flex;flex-direction:column;gap:.65rem">
+          <div style="display:flex;gap:.75rem"><span style="background:var(--green);color:white;border-radius:4px;padding:.15rem .45rem;font-size:.75rem;font-weight:900;flex-shrink:0;margin-top:2px">Q1</span><p style="font-size:.875rem;font-weight:600;line-height:1.55"><strong>Which restaurant had the best deal overall?</strong> Is it a chain or local? Why might chains price differently?</p></div>
+          <div style="display:flex;gap:.75rem"><span style="background:var(--green);color:white;border-radius:4px;padding:.15rem .45rem;font-size:.75rem;font-weight:900;flex-shrink:0;margin-top:2px">Q2</span><p style="font-size:.875rem;font-weight:600;line-height:1.55"><strong>Was the larger pizza always a better value?</strong> If not — why? Promotional smalls? Premium large pricing?</p></div>
+          <div style="display:flex;gap:.75rem"><span style="background:var(--green);color:white;border-radius:4px;padding:.15rem .45rem;font-size:.75rem;font-weight:900;flex-shrink:0;margin-top:2px">Q3</span><p style="font-size:.875rem;font-weight:600;line-height:1.55"><strong>What was the class average cost/in²?</strong> A national average for cheese pizza is roughly $0.08–$0.12/sq in.</p></div>
+          <div style="display:flex;gap:.75rem"><span style="background:var(--green);color:white;border-radius:4px;padding:.15rem .45rem;font-size:.75rem;font-weight:900;flex-shrink:0;margin-top:2px">Q4</span><p style="font-size:.875rem;font-weight:600;line-height:1.55"><strong>Look at your scatter plot.</strong> Does bigger diameter always mean lower cost/in²? Were there outliers?</p></div>
+          <div style="display:flex;gap:.75rem"><span style="background:var(--green);color:white;border-radius:4px;padding:.15rem .45rem;font-size:.75rem;font-weight:900;flex-shrink:0;margin-top:2px">Q5</span><p style="font-size:.875rem;font-weight:600;line-height:1.55"><strong>If you had $20 to spend,</strong> which restaurant and size gives you the most pizza? Show your calculation.</p></div>
+          <div style="display:flex;gap:.75rem"><span style="background:var(--green);color:white;border-radius:4px;padding:.15rem .45rem;font-size:.75rem;font-weight:900;flex-shrink:0;margin-top:2px">Q6</span><p style="font-size:.875rem;font-weight:600;line-height:1.55"><strong>The calculator only measures area.</strong> What factors did it miss? (Toppings, crust style, delivery fees, taste.)</p></div>
+        </div>
+      </div>
+      <div class="tgc or"><h3>🏆 Extension: The Class Best Deal Award</h3><ul class="objl"><li><strong>🥇 Best Value</strong> — lowest cost per square inch</li><li><strong>💸 Worst Value</strong> — highest cost per square inch (maybe taste winner?)</li><li><strong>😲 Biggest Surprise</strong> — the result students least expected</li><li><strong>🏅 Most Consistent</strong> — smallest difference in cost/in² between sizes</li></ul><div class="ttip">💡 <strong>Assessment idea:</strong> Have students write a 3–5 sentence "Consumer Report" recommending the best deal for a family of 4 with a $25 budget, citing their data.</div></div>
+    </div>
+
+    <!-- WORKSHEET -->
+    <div class="tpanel" id="tp-worksheet">
+      <div class="wi" style="padding:0;max-width:100%">
+        <div class="pbtnw"><button class="pbtn" onclick="printWS()">🖨️ Print / Save as PDF</button></div>
+        <div class="wsh"><div style="font-size:2.5rem;margin-bottom:.75rem">🍕</div><h1>Pizza Pi r² Activity Sheet</h1><p>Find the Best Pizza Deal with Math!</p></div>
+        <div class="wscard"><div class="wsnd"><span>Name: <span class="wsblank">&nbsp;</span></span><span>Date: <span class="wsblank">&nbsp;</span></span></div></div>
+        <div class="wsmiss"><h3>📐 Your Mission</h3><p>Use the formula <strong>A = πr²</strong> to calculate pizza area and find which size gives you the most pizza for your money! Research two pizza deals from local restaurants and compare them.</p></div>
+        <div class="wsps"><h3>🍕 Pizza #1</h3>
+          <div class="wsfl">Restaurant name: <span class="wsblank">&nbsp;</span></div>
+          <div class="wsfl">Pizza diameter: <span class="wsblank">&nbsp;</span> inches</div>
+          <div class="wsfl">Price: $<span class="wsblank">&nbsp;</span></div>
+          <div class="wswb"><h4>Show Your Work:</h4>
+            <div class="wscr">• <span class="wsc">Radius</span> (diameter ÷ 2) = <span class="wsblank">&nbsp;</span> inches</div>
+            <div class="wscr">• <span class="wsc">Area</span> (π × r²) = <span class="wsblank">&nbsp;</span> square inches</div>
+            <div class="wscr">• <span class="wsc">Cost per square inch</span> (price ÷ area) = $<span class="wsblank">&nbsp;</span></div>
+            <div class="wscr">• <span class="wsc">Pizzabytes</span> (area ÷ 3) = <span class="wsblank">&nbsp;</span> Pizzabytes</div>
+            <div class="wscr">• <span class="wsc">Cost per Pizzabyte</span> = <span class="wsblank">&nbsp;</span> cents</div>
+          </div>
+        </div>
+        <div class="wsps"><h3>🍕 Pizza #2</h3>
+          <div class="wsfl">Restaurant name: <span class="wsblank">&nbsp;</span></div>
+          <div class="wsfl">Pizza diameter: <span class="wsblank">&nbsp;</span> inches</div>
+          <div class="wsfl">Price: $<span class="wsblank">&nbsp;</span></div>
+          <div class="wswb"><h4>Show Your Work:</h4>
+            <div class="wscr">• <span class="wsc">Radius</span> (diameter ÷ 2) = <span class="wsblank">&nbsp;</span> inches</div>
+            <div class="wscr">• <span class="wsc">Area</span> (π × r²) = <span class="wsblank">&nbsp;</span> square inches</div>
+            <div class="wscr">• <span class="wsc">Cost per square inch</span> (price ÷ area) = $<span class="wsblank">&nbsp;</span></div>
+            <div class="wscr">• <span class="wsc">Pizzabytes</span> (area ÷ 3) = <span class="wsblank">&nbsp;</span> Pizzabytes</div>
+            <div class="wscr">• <span class="wsc">Cost per Pizzabyte</span> = <span class="wsblank">&nbsp;</span> cents</div>
+          </div>
+        </div>
+        <div class="wsbetter"><h3>🎯 Which is the Better Deal?</h3><p>Circle one: <strong>Pizza #1 &nbsp;/&nbsp; Pizza #2</strong></p><p style="margin-top:.5rem;font-size:.875rem;font-weight:700">Explain why:</p><div class="wseline"></div><div class="wseline" style="margin-top:.6rem"></div></div>
+        <div class="wsref"><h3>💡 Reflection Questions</h3>
+          <div class="wsq">1. Why does area matter more than just diameter?</div><div class="wslines"><div class="wsline"></div><div class="wsline"></div></div>
+          <div class="wsq">2. Did the results surprise you? Why or why not?</div><div class="wslines"><div class="wsline"></div><div class="wsline"></div></div>
+          <div class="wsq">3. What other factors might affect your pizza choice?</div><div class="wslines"><div class="wsline"></div><div class="wsline"></div></div>
+        </div>
+        <div class="wsfoot"><div style="font-size:1.8rem;margin-bottom:.5rem">🍕 ✏️ 🎓</div><p>Check your work at <a onclick="showPage('calc');return false">PizzaPiRSquared.com</a></p><p style="color:var(--gray);font-size:.8rem;margin-top:.25rem">Use the calculator to verify your answers!</p></div>
+      </div>
+    </div>
+
+    <!-- STANDARDS -->
+    <div class="tpanel" id="tp-standards">
+      <div class="stdcard"><h3>📚 Common Core Math Standards</h3>
+        <div class="stds">Geometry (Grade 7)</div><ul class="stdl"><li>7.G.B.4 — Know and use formulas for area and circumference of a circle</li><li>7.G.B.6 — Solve real-world problems involving area of 2D figures</li></ul>
+        <div class="stds">Ratios &amp; Proportional Reasoning</div><ul class="stdl"><li>7.RP.A.1 — Compute unit rates associated with ratios of fractions</li><li>7.RP.A.2 — Recognize and represent proportional relationships</li></ul>
+        <div class="stds">Statistics &amp; Data (Grades 6–8)</div><ul class="stdl"><li>6.SP.B.4 — Display numerical data in plots, including dot plots and histograms</li><li>8.SP.A.1 — Construct and interpret scatter plots for bivariate data</li><li>8.SP.A.3 — Use the equation of a linear model to solve problems</li></ul>
+        <div class="stds">High School</div><ul class="stdl"><li>HSG.GMD.A.1 — Give informal arguments for geometric formulas</li><li>HSF.BF.A.1 — Write a function to describe a relationship between two quantities</li></ul>
+      </div>
+      <div class="tipscard"><h3>💡 Teaching Tips</h3><ul class="tipsl">
+        <li>Have students work in pairs — one computes, one checks. Mirrors real-world data work.</li>
+        <li>Watch for error #1: using diameter instead of radius (forgetting to divide by 2)</li>
+        <li>Watch for error #2: computing π × d² instead of π × r²</li>
+        <li>Pizzabytes™ is a great scaffolding tool — whole numbers are less intimidating</li>
+        <li>This lesson pairs well with unit pricing in grocery stores — same mathematical concept</li>
+        <li>For homework extension: students check two real deals at home and report back</li>
+      </ul></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- LIMITS -->
+<div class="page" id="page-limits">
+  <div class="ph"><h1>What We Don't Calculate</h1><p>Our calculator is awesome — but it's not magic</p></div>
+  <div class="limi">
+    <div class="limhl"><h3>The bottom line</h3><p>We calculate cost per square inch based on diameter and price. That's it! It's a great baseline, but real life has more variables. Use this as a <strong>guide, not the final word.</strong></p></div>
+    <div class="limgrid">
+      <div class="limc"><h4>Crust thickness or topping coverage</h4><p>We calculate area, but not crust-to-topping ratio. Deep dish vs. thin crust? Totally different!</p></div>
+      <div class="limc"><h4>Ingredient quality or oven type</h4><p>Premium ingredients and wood-fired ovens make a difference. Sometimes the 'worse deal' is the better pizza!</p></div>
+      <div class="limc"><h4>Delivery fees and discounts</h4><p>Fees, tips, and coupons can change the math. Always check the total cost!</p></div>
+      <div class="limc"><h4>The joy of leftover cold pizza</h4><p>Some pizzas taste amazing cold. This is scientifically unmeasurable but highly important. 🤤</p></div>
+    </div>
+    <div class="taste"><h3>🍕 Trust your taste buds too!</h3><p>If you LOVE that artisan pizza, who cares if it's a few cents more? Life's too short for mediocre pizza!</p></div>
+    <button class="pcta" onclick="showPage('calc')">Let's calculate! → Try the Calculator</button>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-col">
+        <h4>πr².com</h4>
+        <p>The pizza value calculator that teaches real-world math. Free forever for students and teachers.</p>
+        <div class="footer-btns" style="margin-top:.75rem">
+          <button class="bmcbtn" onclick="window.open('https://buymeacoffee.com','_blank')">☕ Buy Me a Coffee</button>
+          <button class="tptfootbtn" onclick="window.open('https://teacherspayteachers.com','_blank')">📦 TPT Bundle</button>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Tools</h4>
+        <a onclick="showPage('calc')">🧮 Pizza Calculator</a>
+        <a onclick="showPage('learn')">📖 Learn the Math</a>
+        <a onclick="showPage('teachers');showTab('worksheet')">📄 Student Worksheet</a>
+        <a onclick="showPage('teachers');showTab('data')">📊 Class Data Tool</a>
+        <a onclick="showPage('teachers');showTab('graph')">📈 Live Graphs</a>
+      </div>
+      <div class="footer-col">
+        <h4>Teachers</h4>
+        <a onclick="showPage('teachers');showTab('lesson')">⏱ Lesson Plan</a>
+        <a onclick="showPage('teachers');showTab('standards')">📚 Standards Alignment</a>
+        <a onclick="showPage('teachers');showTab('analysis')">🔍 Discussion Guide</a>
+        <a onclick="showPage('limits')">⚠️ Calculator Limits</a>
+        <a onclick="window.open('https://teacherspayteachers.com','_blank')">📦 Full Bundle on TPT</a>
+      </div>
+    </div>
+    <div class="footer-divider">
+      <div>
+        <div class="footer-logo"><span>🍕</span><span><span class="pi">πr²</span>.com</span></div>
+        <div class="footer-tagline" style="margin-top:.3rem">Made with 🍕 and π to maximize your pizza happiness!</div>
+        <div class="footer-tagline">Because life's too short for overpriced pizza.</div>
+      </div>
+      <div style="font-size:.75rem;font-weight:600;color:rgba(255,255,255,.3);text-align:right">Free to use · No ads · No tracking</div>
+    </div>
+  </div>
+</footer>
+
+<div class="notif" id="notif"></div>
+
+<script>
+// MATH
+function pArea(d){var r=d/2;return Math.PI*r*r}
+function pRate(d,p){return p/pArea(d)}
+function pBytes(d){return Math.round(pArea(d)/3)}
+function cpb(d,p){return(p/pBytes(d))*100}
+
+// NAV
+function showPage(p){
+  document.querySelectorAll('.page').forEach(function(x){x.classList.remove('active')});
+  document.querySelectorAll('.nl').forEach(function(x){x.classList.remove('active')});
+  var pg=document.getElementById('page-'+p);
+  var lnk=document.getElementById('nav-'+p);
+  if(pg)pg.classList.add('active');
+  if(lnk)lnk.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// TEACHER TABS
+function showTab(id){
+  document.querySelectorAll('.ttab').forEach(function(t){t.classList.remove('active')});
+  document.querySelectorAll('.tpanel').forEach(function(p){p.classList.remove('active')});
+  var tab=document.getElementById('tt-'+id);
+  var panel=document.getElementById('tp-'+id);
+  if(tab)tab.classList.add('active');
+  if(panel)panel.classList.add('active');
+  if(id==='graph'){setTimeout(function(){drawBar();drawScatter();drawCircles()},50)}
+}
+
+// GRAPH SUB-TABS
+function showGTab(id){
+  document.querySelectorAll('.gtab').forEach(function(t){t.classList.remove('active')});
+  document.querySelectorAll('.gpanel').forEach(function(p){p.classList.remove('active')});
+  var tab=document.getElementById('gt-'+id);
+  var panel=document.getElementById('gp-'+id);
+  if(tab)tab.classList.add('active');
+  if(panel)panel.classList.add('active');
+  if(id==='bar')drawBar();
+  if(id==='scatter')drawScatter();
+  if(id==='circles')drawCircles();
+}
+
+// CALCULATOR
+var lastCalc=null;
+function doCalc(){
+  var ld=parseFloat(document.getElementById('ld').value);
+  var lp=parseFloat(document.getElementById('lp').value);
+  var sd=parseFloat(document.getElementById('sd').value);
+  var sp=parseFloat(document.getElementById('sp').value);
+  if([ld,lp,sd,sp].some(function(v){return isNaN(v)||v<=0})){notify('Please fill in all fields with valid numbers.');return}
+  var la=pArea(ld),sa=pArea(sd),lr=pRate(ld,lp),sr=pRate(sd,sp);
+  var lb=pBytes(ld),sb=pBytes(sd),lc=cpb(ld,lp),sc=cpb(sd,sp);
+  var lw=lr<=sr;
+  var savePct=Math.round(Math.abs(Math.max(lr,sr)-Math.min(lr,sr))/Math.max(lr,sr)*100);
+  lastCalc={ld:ld,lp:lp,sd:sd,sp:sp};
+  document.getElementById('wname').textContent=(lw?'Large':'Small')+' Pizza';
+  document.getElementById('ysave').textContent=savePct+'%';
+  document.getElementById('rcards').innerHTML=mkRC('Large Pizza','or',ld,lp,la,lr,lb,lc,lw)+mkRC('Small Pizza','am',sd,sp,sa,sr,sb,sc,!lw);
+  var maxD=Math.max(ld,sd);
+  function sc2(d){return Math.round((d/maxD)*140)}
+  var ls=sc2(ld),ss=sc2(sd);
+  document.getElementById('vcircles').innerHTML=
+    '<div class="cw"><div class="pcirc" style="width:'+ls+'px;height:'+ls+'px;background:'+(lw?'#16a34a':'#f97316')+'">'+(lw?'<span class="wtag">WINNER!</span>':'')+'🍕</div><div class="cn">Large</div><div class="cd">'+ld+'" diameter</div></div>'+
+    '<div class="sarrow">→</div>'+
+    '<div class="cw"><div class="pcirc" style="width:'+ss+'px;height:'+ss+'px;background:'+(!lw?'#16a34a':'#f59e0b')+'">'+(!lw?'<span class="wtag">WINNER!</span>':'')+'🍕</div><div class="cn">Small</div><div class="cd">'+sd+'" diameter</div></div>';
+  var rs=document.getElementById('results');
+  rs.classList.add('show');
+  setTimeout(function(){rs.scrollIntoView({behavior:'smooth',block:'start'})},100);
+}
+
+function mkRC(name,col,d,p,area,rate,bytes,cpbv,isW){
+  return '<div class="rc'+(isW?' win':'')+'"><div class="rch"><div class="rcn"><div class="pic '+col+'" style="width:32px;height:32px;font-size:.9rem">🍕</div>'+name+'</div>'+(isW?'<div class="wpill">WINNER</div>':'')+'</div>'+
+    '<div class="sb"><div class="sbl">COST PER SQUARE INCH</div><div class="sbv">$'+rate.toFixed(4)+'</div><div class="sbs">'+area.toFixed(0)+' sq in total</div></div>'+
+    '<div class="sb pt"><div class="sbl">PIZZABYTES (1 = 3 SQ IN)</div><div class="sbv">'+bytes+' Pizzabytes</div><div class="sbs">'+cpbv.toFixed(1)+'c each</div></div>'+
+    '</div>';
+}
+
+// LEARN CALC
+function learnCalc(){
+  var ad=parseFloat(document.getElementById('lad').value);
+  var ap=parseFloat(document.getElementById('lap').value);
+  var bd=parseFloat(document.getElementById('lbd').value);
+  var bp=parseFloat(document.getElementById('lbp').value);
+  var el=document.getElementById('lresult');
+  if([ad,ap,bd,bp].some(function(v){return isNaN(v)||v<=0})){el.innerHTML='';return}
+  var aA=pArea(ad),bA=pArea(bd),aR=pRate(ad,ap),bR=pRate(bd,bp);
+  var aByt=pBytes(ad),bByt=pBytes(bd),aW=aR<=bR;
+  var areaPct=((Math.max(aA,bA)/Math.min(aA,bA)-1)*100).toFixed(0);
+  var savePct=((Math.abs(aR-bR)/Math.max(aR,bR))*100).toFixed(1);
+  var wn=aW?('Pizza A ('+ad+'")'):'Pizza B ('+bd+'")';
+  var ln=aW?('Pizza B ('+bd+'")'):'Pizza A ('+ad+'")';
+  el.innerHTML='<div class="lrg">'+
+    '<div class="lrc '+(aW?'lwin':'llos')+'"><div class="lrct">🍕 Pizza A — '+ad+'" '+(aW?'⭐ BEST VALUE':'')+'</div>'+
+    '<div class="lrr">Radius: <strong>'+(ad/2).toFixed(1)+'"</strong></div>'+
+    '<div class="lrr">Area (πr²): <strong>'+aA.toFixed(1)+' sq in</strong></div>'+
+    '<div class="lrr">Price: <strong>$'+ap.toFixed(2)+'</strong></div>'+
+    '<div class="lrr'+(aW?' grn':'')+'">Cost/sq in: <strong>$'+aR.toFixed(4)+'</strong></div>'+
+    '<div class="lrr">Pizzabytes: <strong>'+aByt+'</strong></div></div>'+
+    '<div class="lrc '+(!aW?'lwin':'llos')+'"><div class="lrct">🍕 Pizza B — '+bd+'" '+(!aW?'⭐ BEST VALUE':'')+'</div>'+
+    '<div class="lrr">Radius: <strong>'+(bd/2).toFixed(1)+'"</strong></div>'+
+    '<div class="lrr">Area (πr²): <strong>'+bA.toFixed(1)+' sq in</strong></div>'+
+    '<div class="lrr">Price: <strong>$'+bp.toFixed(2)+'</strong></div>'+
+    '<div class="lrr'+(!aW?' grn':'')+'">Cost/sq in: <strong>$'+bR.toFixed(4)+'</strong></div>'+
+    '<div class="lrr">Pizzabytes: <strong>'+bByt+'</strong></div></div></div>'+
+    '<div class="lverdict"><strong>'+wn+'</strong> is the better deal — $'+Math.min(aR,bR).toFixed(4)+'/sq in vs $'+Math.max(aR,bR).toFixed(4)+'/sq in for '+ln+'.<br>You save <strong>'+savePct+'%</strong> per sq in. The larger pizza has <strong>'+areaPct+'% more area</strong> total.</div>';
+}
+
+// EMAIL SIGNUP
+function emailSignup(){
+  var email=document.getElementById('email-input').value.trim();
+  if(!email||!email.includes('@')){notify('Please enter a valid email address.');return}
+  // In production: POST to Mailchimp/ConvertKit API
+  // For now: show success state
+  document.getElementById('email-success').style.display='block';
+  document.getElementById('email-input').value='';
+  notify('You\'re subscribed!');
+}
+
+// CLASS SPREADSHEET
+var ssRows=[];
+var ssId=1;
+
+function ssAdd(){
+  var id=ssId++;
+  ssRows.push({id:id,student:'',restaurant:'',d1:'',p1:'',d2:'',p2:''});
+  renderSS();
+  setTimeout(function(){
+    var inp=document.getElementById('ssin-s-'+id);
+    if(inp)inp.focus();
+  },30);
+}
+
+function ssCalc(d,p){
+  var dv=parseFloat(d),pv=parseFloat(p);
+  if(isNaN(dv)||isNaN(pv)||dv<=0||pv<=0)return{area:'',rate:''};
+  var area=Math.PI*(dv/2)*(dv/2);
+  return{area:area.toFixed(1),rate:((pv/area)*100).toFixed(3)};
+}
+
+function ssSet(id,field,val){
+  var row=ssRows.find(function(r){return r.id===id});
+  if(!row)return;
+  row[field]=val;
+  // Update only calculated cells, never re-render (keeps focus)
+  var c1=ssCalc(row.d1,row.p1),c2=ssCalc(row.d2,row.p2);
+  var a1=document.getElementById('ssa1-'+id);
+  var r1=document.getElementById('ssr1-'+id);
+  var a2=document.getElementById('ssa2-'+id);
+  var r2=document.getElementById('ssr2-'+id);
+  var bd=document.getElementById('ssbd-'+id);
+  if(a1)a1.textContent=c1.area;
+  if(r1)r1.textContent=c1.rate?c1.rate+'c':'';
+  if(a2)a2.textContent=c2.area;
+  if(r2)r2.textContent=c2.rate?c2.rate+'c':'';
+  if(bd){
+    var bdt='-',bdc='var(--gray)',bdw=400;
+    if(c1.rate&&c2.rate){
+      var v1=parseFloat(c1.rate),v2=parseFloat(c2.rate);
+      if(v1<v2){bdt='Size 1';bdc='var(--green)';bdw=900}
+      else if(v2<v1){bdt='Size 2';bdc='#1d4ed8';bdw=900}
+      else bdt='Tie';
+    }
+    bd.textContent=bdt;
+    bd.style.color=bdc;
+    bd.style.fontWeight=bdw;
+  }
+  renderSSSum();
+}
+
+function ssDel(id){
+  ssRows=ssRows.filter(function(r){return r.id!==id});
+  renderSS();
+}
+
+function ssClear(){
+  if(!ssRows.length||confirm('Clear all data?')){ssRows=[];ssId=1;renderSS()}
+}
+
+function renderSS(){
+  var tbody=document.getElementById('sstbody');
+  if(!tbody)return;
+  if(!ssRows.length){
+    tbody.innerHTML='<tr><td colspan="12" style="text-align:center;padding:2rem;color:var(--gray);font-style:italic;font-size:.85rem">No data yet — click + Add Row to get started</td></tr>';
+    renderSSSum();return;
+  }
+  tbody.innerHTML=ssRows.map(function(row){
+    var c1=ssCalc(row.d1,row.p1),c2=ssCalc(row.d2,row.p2);
+    var bdt='-',bdc='var(--gray)',bdw=400;
+    if(c1.rate&&c2.rate){
+      var v1=parseFloat(c1.rate),v2=parseFloat(c2.rate);
+      if(v1<v2){bdt='Size 1';bdc='var(--green)';bdw=900}
+      else if(v2<v1){bdt='Size 2';bdc='#1d4ed8';bdw=900}
+      else bdt='Tie';
+    }
+    return '<tr>'+
+      '<td><input class="ssi" id="ssin-s-'+row.id+'" value="'+esc(row.student)+'" placeholder="Name" oninput="ssSet('+row.id+',\'student\',this.value)"></td>'+
+      '<td><input class="ssi" id="ssin-r-'+row.id+'" value="'+esc(row.restaurant)+'" placeholder="Restaurant" oninput="ssSet('+row.id+',\'restaurant\',this.value)"></td>'+
+      '<td><input class="ssi ssn" id="ssin-d1-'+row.id+'" value="'+row.d1+'" placeholder="12" type="number" min="1" max="48" step="0.5" oninput="ssSet('+row.id+',\'d1\',this.value)"></td>'+
+      '<td><input class="ssi ssn" id="ssin-p1-'+row.id+'" value="'+row.p1+'" placeholder="9.99" type="number" min="0" step="0.01" oninput="ssSet('+row.id+',\'p1\',this.value)"></td>'+
+      '<td class="ssc gcc" id="ssa1-'+row.id+'">'+c1.area+'</td>'+
+      '<td class="ssc gcc" id="ssr1-'+row.id+'">'+(c1.rate?c1.rate+'c':'')+'</td>'+
+      '<td><input class="ssi ssn" id="ssin-d2-'+row.id+'" value="'+row.d2+'" placeholder="16" type="number" min="1" max="48" step="0.5" oninput="ssSet('+row.id+',\'d2\',this.value)"></td>'+
+      '<td><input class="ssi ssn" id="ssin-p2-'+row.id+'" value="'+row.p2+'" placeholder="18.99" type="number" min="0" step="0.01" oninput="ssSet('+row.id+',\'p2\',this.value)"></td>'+
+      '<td class="ssc bcc" id="ssa2-'+row.id+'">'+c2.area+'</td>'+
+      '<td class="ssc bcc" id="ssr2-'+row.id+'">'+(c2.rate?c2.rate+'c':'')+'</td>'+
+      '<td class="ssc" id="ssbd-'+row.id+'" style="color:'+bdc+';font-weight:'+bdw+'">'+bdt+'</td>'+
+      '<td><button class="ssdel" onclick="ssDel('+row.id+')">✕</button></td>'+
+      '</tr>';
+  }).join('');
+  renderSSSum();
+}
+
+function renderSSSum(){
+  var el=document.getElementById('sssum');if(!el)return;
+  var rates=[],s1w=0,s2w=0;
+  ssRows.forEach(function(r){
+    var c1=ssCalc(r.d1,r.p1),c2=ssCalc(r.d2,r.p2);
+    if(c1.rate)rates.push(parseFloat(c1.rate));
+    if(c2.rate)rates.push(parseFloat(c2.rate));
+    if(c1.rate&&c2.rate){if(parseFloat(c1.rate)<=parseFloat(c2.rate))s1w++;else s2w++;}
+  });
+  if(!rates.length){el.style.display='none';return}
+  el.style.display='block';
+  var mean=(rates.reduce(function(a,b){return a+b},0)/rates.length).toFixed(2);
+  var sorted=[].concat(rates).sort(function(a,b){return a-b});
+  var mid=rates.length;
+  var median=mid%2===0?(sorted[mid/2-1]+sorted[mid/2])/2:sorted[Math.floor(mid/2)];
+  var range=(Math.max.apply(null,rates)-Math.min.apply(null,rates)).toFixed(2);
+  el.innerHTML='Class Stats: Mean <strong>'+mean+'c/in²</strong> | Median <strong>'+median.toFixed(2)+'c</strong> | Range <strong>'+range+'c</strong> | Size 1 wins: <strong>'+s1w+'</strong> | Size 2 wins: <strong>'+s2w+'</strong>';
+}
+
+function ssPrint(){
+  var rows=ssRows.map(function(r){
+    var c1=ssCalc(r.d1,r.p1),c2=ssCalc(r.d2,r.p2);
+    var bd='';if(c1.rate&&c2.rate){var v1=parseFloat(c1.rate),v2=parseFloat(c2.rate);bd=v1<v2?'Size 1':v2<v1?'Size 2':'Tie'}
+    return '<tr><td>'+esc(r.student||'-')+'</td><td>'+esc(r.restaurant||'-')+'</td><td>'+(r.d1||'-')+'"</td><td>$'+(r.p1||'-')+'</td><td>'+(c1.area||'-')+'</td><td>'+(c1.rate?c1.rate+'c':'-')+'</td><td>'+(r.d2||'-')+'"</td><td>$'+(r.p2||'-')+'</td><td>'+(c2.area||'-')+'</td><td>'+(c2.rate?c2.rate+'c':'-')+'</td><td>'+bd+'</td></tr>';
+  }).join('');
+  var w=window.open('','_blank');
+  w.document.write('<!DOCTYPE html><html><head><title>Class Pizza Data</title><style>body{font-family:Arial,sans-serif;padding:1.5cm;font-size:9pt}h1{font-size:13pt;margin-bottom:8pt}table{border-collapse:collapse;width:100%}th{background:#f4621f;color:white;padding:5pt 7pt;text-align:left;font-size:8.5pt}td{border:.5pt solid #ddd;padding:4pt 7pt;font-size:8.5pt}tr:nth-child(even){background:#fafafa}@page{size:landscape;margin:1.5cm}</style></head>');
+  w.document.write('<body><h1>Class Pizza Data</h1><table><tr><th>Student</th><th>Restaurant</th><th>Size 1</th><th>Price 1</th><th>Area 1</th><th>c/in2 1</th><th>Size 2</th><th>Price 2</th><th>Area 2</th><th>c/in2 2</th><th>Better Deal</th></tr>'+rows+'</table></body></html>');
+  w.document.close();
+  setTimeout(function(){w.print()},400);
+}
+
+// LIVE GRAPHS
+function getPoints(){
+  var pts=[];
+  ssRows.forEach(function(r){
+    if(r.d1&&r.p1){var c=ssCalc(r.d1,r.p1);if(c.rate)pts.push({d:parseFloat(r.d1),rate:parseFloat(c.rate),label:r.restaurant||'?',sz:'S1'})}
+    if(r.d2&&r.p2){var c=ssCalc(r.d2,r.p2);if(c.rate)pts.push({d:parseFloat(r.d2),rate:parseFloat(c.rate),label:r.restaurant||'?',sz:'S2'})}
+  });
+  return pts;
+}
+
+function gEmpty(id,msg){var el=document.getElementById(id);if(el)el.innerHTML='<div style="text-align:center;padding:3rem 1rem;color:var(--gray);font-size:.9rem;font-weight:700">'+msg+'</div>'}
+
+function drawBar(){
+  var el=document.getElementById('g-bar');if(!el)return;
+  var pts=getPoints();
+  if(!pts.length){gEmpty('g-bar','No data yet — add rows in the Class Data tab first.');return}
+  var PL=50,PR=20,PT=30,PB=72,H=220,bW=22,gap=6,gGap=20;
+  var groups={};
+  pts.forEach(function(p){if(!groups[p.label])groups[p.label]=[];groups[p.label].push(p)});
+  var keys=Object.keys(groups);
+  var W=PL+PR+gGap;keys.forEach(function(k){W+=groups[k].length*(bW+gap)+gGap});
+  var maxR=Math.max.apply(null,pts.map(function(p){return p.rate}))*1.15;
+  var minR=Math.min.apply(null,pts.map(function(p){return p.rate}));
+  var svg='<svg viewBox="0 0 '+W+' '+(H+PT+PB)+'" style="width:100%;min-width:300px;font-family:Nunito,sans-serif">';
+  for(var i=0;i<=4;i++){var yv=(i/4)*maxR,y=PT+H-(i/4)*H;svg+='<line x1="'+PL+'" y1="'+y+'" x2="'+(W-PR)+'" y2="'+y+'" stroke="#e5e7eb" stroke-width="1"/><text x="'+(PL-5)+'" y="'+(y+4)+'" text-anchor="end" font-size="10" fill="#9ca3af">'+yv.toFixed(1)+'c</text>'}
+  svg+='<line x1="'+PL+'" y1="'+PT+'" x2="'+PL+'" y2="'+(PT+H)+'" stroke="#d1d5db" stroke-width="1.5"/><line x1="'+PL+'" y1="'+(PT+H)+'" x2="'+(W-PR)+'" y2="'+(PT+H)+'" stroke="#d1d5db" stroke-width="1.5"/>';
+  var x=PL+gGap;
+  keys.forEach(function(key){
+    var grp=groups[key];var gcx=x+grp.length*(bW+gap)/2;
+    var lbl=key.length>12?key.substring(0,12)+'...':key;
+    svg+='<text x="'+gcx+'" y="'+(PT+H+20)+'" text-anchor="middle" font-size="10" fill="#374151" font-weight="700">'+lbl+'</text>';
+    grp.forEach(function(p){
+      var h=Math.max(2,Math.round((p.rate/maxR)*H)),y2=PT+H-h;
+      var isW=Math.abs(p.rate-minR)<0.001;
+      var col=p.sz==='S1'?(isW?'#16a34a':'#86efac'):(isW?'#1d4ed8':'#93c5fd');
+      svg+='<rect x="'+x+'" y="'+y2+'" width="'+bW+'" height="'+h+'" fill="'+col+'" rx="3"/>';
+      svg+='<text x="'+(x+bW/2)+'" y="'+(y2-4)+'" text-anchor="middle" font-size="9" fill="#374151">'+p.rate.toFixed(1)+'c</text>';
+      svg+='<text x="'+(x+bW/2)+'" y="'+(PT+H+36)+'" text-anchor="middle" font-size="9" fill="'+(p.sz==='S1'?'#16a34a':'#1d4ed8')+'">'+p.d+'"</text>';
+      if(isW)svg+='<circle cx="'+(x+bW/2)+'" cy="'+(y2-14)+'" r="6" fill="none" stroke="#16a34a" stroke-width="2"/>';
+      x+=bW+gap;
+    });
+    x+=gGap;
+  });
+  svg+='<rect x="'+PL+'" y="'+(PT+H+50)+'" width="10" height="10" fill="#16a34a" rx="2"/><text x="'+(PL+14)+'" y="'+(PT+H+60)+'" font-size="9" fill="#374151">S1 winner</text>';
+  svg+='<rect x="'+(PL+90)+'" y="'+(PT+H+50)+'" width="10" height="10" fill="#86efac" rx="2"/><text x="'+(PL+104)+'" y="'+(PT+H+60)+'" font-size="9" fill="#374151">S1</text>';
+  svg+='<rect x="'+(PL+140)+'" y="'+(PT+H+50)+'" width="10" height="10" fill="#1d4ed8" rx="2"/><text x="'+(PL+154)+'" y="'+(PT+H+60)+'" font-size="9" fill="#374151">S2 winner</text>';
+  svg+='<rect x="'+(PL+230)+'" y="'+(PT+H+50)+'" width="10" height="10" fill="#93c5fd" rx="2"/><text x="'+(PL+244)+'" y="'+(PT+H+60)+'" font-size="9" fill="#374151">S2</text>';
+  svg+='</svg>';el.innerHTML=svg;
+}
+
+function drawScatter(){
+  var el=document.getElementById('g-scatter');if(!el)return;
+  var pts=getPoints();
+  if(pts.length<2){gEmpty('g-scatter','Add at least 2 data rows in the Class Data tab.');return}
+  var PL=55,PR=30,PT=30,PB=60,W=560,H=240;
+  var minD=Math.min.apply(null,pts.map(function(p){return p.d}))-1;
+  var maxD=Math.max.apply(null,pts.map(function(p){return p.d}))+1;
+  var minR=Math.min.apply(null,pts.map(function(p){return p.rate}))*.85;
+  var maxR=Math.max.apply(null,pts.map(function(p){return p.rate}))*1.15;
+  function px(d){return PL+((d-minD)/(maxD-minD))*(W-PL-PR)}
+  function py(r){return PT+H-((r-minR)/(maxR-minR))*H}
+  var n=pts.length,sumX=0,sumY=0,sumXY=0,sumX2=0;
+  pts.forEach(function(p){sumX+=p.d;sumY+=p.rate;sumXY+=p.d*p.rate;sumX2+=p.d*p.d});
+  var slope=(n*sumXY-sumX*sumY)/(n*sumX2-sumX*sumX);
+  var intercept=(sumY-slope*sumX)/n;
+  var svg='<svg viewBox="0 0 '+W+' '+(H+PT+PB)+'" style="width:100%;max-width:560px;font-family:Nunito,sans-serif">';
+  for(var i=0;i<=4;i++){var rv=minR+(i/4)*(maxR-minR),y=py(rv);svg+='<line x1="'+PL+'" y1="'+y+'" x2="'+(W-PR)+'" y2="'+y+'" stroke="#e5e7eb" stroke-width="1"/><text x="'+(PL-5)+'" y="'+(y+4)+'" text-anchor="end" font-size="10" fill="#9ca3af">'+rv.toFixed(1)+'c</text>'}
+  for(var j=0;j<=4;j++){var dv=minD+(j/4)*(maxD-minD),xv=px(dv);svg+='<line x1="'+xv+'" y1="'+PT+'" x2="'+xv+'" y2="'+(PT+H)+'" stroke="#e5e7eb" stroke-width="1"/><text x="'+xv+'" y="'+(PT+H+16)+'" text-anchor="middle" font-size="10" fill="#9ca3af">'+dv.toFixed(0)+'"</text>'}
+  svg+='<line x1="'+PL+'" y1="'+PT+'" x2="'+PL+'" y2="'+(PT+H)+'" stroke="#d1d5db" stroke-width="1.5"/><line x1="'+PL+'" y1="'+(PT+H)+'" x2="'+(W-PR)+'" y2="'+(PT+H)+'" stroke="#d1d5db" stroke-width="1.5"/>';
+  var ty1=Math.max(minR,Math.min(maxR,slope*minD+intercept));
+  var ty2=Math.max(minR,Math.min(maxR,slope*maxD+intercept));
+  svg+='<line x1="'+px(minD)+'" y1="'+py(ty1)+'" x2="'+px(maxD)+'" y2="'+py(ty2)+'" stroke="#f97316" stroke-width="2" stroke-dasharray="6,3" opacity=".7"/>';
+  var dir=slope<0?'Trend: downward (bigger = better value)':'Trend: upward (unusual!)';
+  svg+='<text x="'+(W-PR-4)+'" y="'+(PT+14)+'" text-anchor="end" font-size="9" fill="#f97316" font-weight="700">'+dir+'</text>';
+  pts.forEach(function(p){var cx=px(p.d),cy=py(p.rate),col=p.sz==='S1'?'#16a34a':'#2563eb';svg+='<circle cx="'+cx+'" cy="'+cy+'" r="7" fill="'+col+'" opacity=".85"/><text x="'+cx+'" y="'+(cy-11)+'" text-anchor="middle" font-size="9" fill="#374151" font-weight="700">'+(p.label.length>8?p.label.substring(0,8)+'...':p.label)+'</text>'});
+  svg+='<text x="'+(PL+(W-PL-PR)/2)+'" y="'+(PT+H+40)+'" text-anchor="middle" font-size="11" fill="#374151" font-weight="800">Diameter (inches)</text>';
+  svg+='<circle cx="'+(PL+8)+'" cy="'+(PT+H+55)+'" r="5" fill="#16a34a"/><text x="'+(PL+18)+'" y="'+(PT+H+59)+'" font-size="9" fill="#374151">Size 1</text>';
+  svg+='<circle cx="'+(PL+65)+'" cy="'+(PT+H+55)+'" r="5" fill="#2563eb"/><text x="'+(PL+75)+'" y="'+(PT+H+59)+'" font-size="9" fill="#374151">Size 2</text>';
+  svg+='</svg>';el.innerHTML=svg;
+}
+
+var circleCustom=[];
+function circleAdd(){
+  var d=parseFloat(document.getElementById('cadd-d').value);
+  var lbl=document.getElementById('cadd-l').value.trim()||d+'"';
+  if(isNaN(d)||d<=0){notify('Enter a valid diameter.');return}
+  circleCustom.push({d:d,label:lbl});
+  document.getElementById('cadd-d').value='';
+  document.getElementById('cadd-l').value='';
+  drawCircles();
+}
+
+function drawCircles(){
+  var el=document.getElementById('g-circles');if(!el)return;
+  var seen={};var circles=[];
+  ssRows.forEach(function(r){
+    if(r.d1&&!seen[parseFloat(r.d1)]){seen[parseFloat(r.d1)]=1;circles.push({d:parseFloat(r.d1),label:r.d1+'"'+(r.restaurant?' ('+r.restaurant+')':''),area:pArea(parseFloat(r.d1))})}
+    if(r.d2&&!seen[parseFloat(r.d2)]){seen[parseFloat(r.d2)]=1;circles.push({d:parseFloat(r.d2),label:r.d2+'"'+(r.restaurant?' ('+r.restaurant+')':''),area:pArea(parseFloat(r.d2))})}
+  });
+  circleCustom.forEach(function(c){if(!seen[c.d]){seen[c.d]=1;circles.push({d:c.d,label:c.label,area:pArea(c.d)})}});
+  if(!circles.length){circles=[{d:12,label:'12" pizza',area:pArea(12)},{d:16,label:'16" pizza',area:pArea(16)}]}
+  circles.sort(function(a,b){return a.d-b.d});
+  var maxD=Math.max.apply(null,circles.map(function(c){return c.d}));
+  var scale=90/maxD;
+  var COLS=['#f97316','#2563eb','#16a34a','#9333ea','#f59e0b','#dc2626'];
+  var cH=220,gap=40,totalW=30;
+  circles.forEach(function(c,i){totalW+=c.d*scale*2+(i<circles.length-1?gap:0)});
+  totalW+=30;
+  var svg='<svg viewBox="0 0 '+Math.max(totalW,300)+' '+(cH+80)+'" style="width:100%;font-family:Nunito,sans-serif">';
+  var cx=30;var ref=circles[0];
+  circles.forEach(function(c,i){
+    var r=c.d*scale,cy2=cH-r+10,col=COLS[i%COLS.length];
+    svg+='<circle cx="'+(cx+r)+'" cy="'+(cy2+r)+'" r="'+r+'" fill="'+col+'" opacity=".2"/>';
+    svg+='<circle cx="'+(cx+r)+'" cy="'+(cy2+r)+'" r="'+r+'" fill="none" stroke="'+col+'" stroke-width="2.5"/>';
+    svg+='<text x="'+(cx+r)+'" y="'+(cy2+r+5)+'" text-anchor="middle" font-size="'+Math.max(9,r*.3)+'" fill="'+col+'" font-weight="900">'+c.d+'"</text>';
+    var lbl=c.label.length>16?c.label.substring(0,16)+'...':c.label;
+    svg+='<text x="'+(cx+r)+'" y="'+(cH+20)+'" text-anchor="middle" font-size="10" fill="#374151" font-weight="700">'+lbl+'</text>';
+    svg+='<text x="'+(cx+r)+'" y="'+(cH+34)+'" text-anchor="middle" font-size="9" fill="#6b7280">'+c.area.toFixed(0)+' sq in</text>';
+    if(i>0){var pct=((c.area/ref.area-1)*100).toFixed(0);svg+='<text x="'+(cx+r)+'" y="'+(cH+48)+'" text-anchor="middle" font-size="9" fill="'+col+'" font-weight="700">+'+pct+'% vs '+ref.d+'"</text>'}
+    cx+=r*2+gap;
+  });
+  svg+='</svg>';el.innerHTML=svg;
+}
+
+// PRINT
+function printGuide(){
+  var panels=['tp-overview','tp-lesson','tp-data','tp-analysis','tp-standards'];
+  var titles={'tp-overview':'Overview','tp-lesson':'Lesson Plan (60 min)','tp-data':'Data Collection','tp-analysis':'Data Analysis','tp-standards':'Standards & Tips'};
+  var body='';
+  panels.forEach(function(id){var el=document.getElementById(id);if(el)body+='<div class="sb"><h2 class="sh">'+titles[id]+'</h2>'+el.innerHTML+'</div>'});
+  var w=window.open('','_blank');
+  w.document.write('<!DOCTYPE html><html><head><title>Teacher Guide — πr².com</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;font-size:10pt;color:#1e2a3a;padding:1.5cm;line-height:1.5}h1{font-size:16pt;font-weight:900;margin-bottom:8pt}.sh{font-size:12pt;font-weight:900;color:#f4621f;border-bottom:2pt solid #f4621f;padding-bottom:3pt;margin-bottom:8pt;margin-top:14pt}.sb{margin-bottom:18pt}h3{font-size:9.5pt;font-weight:900;margin-bottom:5pt}h4{font-size:9pt;font-weight:900;margin-bottom:3pt}p,li{font-size:9pt;margin-bottom:4pt;line-height:1.5}ul,ol{padding-left:14pt;margin-bottom:5pt}.tgc{border:1pt solid #e5e7eb;border-radius:4pt;padding:7pt;margin-bottom:7pt;break-inside:avoid}.tgc.bl{background:#eff6ff}.tgc.gr{background:#dcfce7}.tgc.or{background:#fff7ed}.tgc.pu{background:#faf5ff}.tgintro{background:#f3f4f6;border-radius:3pt;padding:6pt;margin-bottom:7pt;font-size:8.5pt;font-style:italic}.tgtl-item{margin-bottom:6pt;padding:6pt;border-radius:3pt;border-left:3pt solid #f4621f;background:#fff7ed;break-inside:avoid}.tgtl-item.bl{border-color:#2563eb;background:#eff6ff}.tgtl-item.gr{border-color:#16a34a;background:#dcfce7}.tgtl-item.pu{border-color:#9333ea;background:#faf5ff}.tgtl-item.ye{border-color:#f59e0b;background:#fefce8}.tgtl-item.gy{border-color:#6b7280;background:#f9fafb}.tgtl-time{font-size:7.5pt;font-weight:900;text-transform:uppercase;color:#6b7280;margin-bottom:3pt}.ttip{background:rgba(0,0,0,.06);padding:4pt;margin-top:4pt;font-size:8pt}.objcard{background:#eff6ff;border:1pt solid #bfdbfe;border-radius:3pt;padding:7pt;margin-bottom:7pt}.objl,.stdl,.tipsl{list-style:disc;padding-left:13pt}.stdcard{background:#faf5ff;border:1pt solid #ddd6fe;border-radius:3pt;padding:7pt;margin-bottom:7pt}.tipscard{background:#fefce8;border:1pt solid #fde68a;border-radius:3pt;padding:7pt}.stds{font-size:8pt;font-weight:900;color:#9333ea;margin:.4rem 0 .2rem}.ovgrid{display:grid;grid-template-columns:1fr 1fr;gap:5pt;margin-top:7pt}.ovc{border:1pt solid #e5e7eb;border-radius:3pt;padding:6pt}.trc2{display:grid;grid-template-columns:1fr 1fr;gap:5pt;margin-bottom:7pt}.trc{border:1pt solid #e5e7eb;border-radius:3pt;padding:6pt}button,input,.ttabs,.gtabs,.ssbtn,.pbtnw,.ilink,svg,table,.tpt-banner,.email-capture{display:none!important}@page{margin:1.5cm;size:letter}</style></head><body>');
+  w.document.write('<h1>πr².com — Teacher Guide</h1>'+body+'<p style="margin-top:15pt;font-size:8pt;color:#9ca3af">Generated by πr².com • Free for classroom use • pizzapirsquared.com</p></body></html>');
+  w.document.close();
+  setTimeout(function(){w.print()},400);
+}
+
+function printWS(){
+  showPage('teachers');
+  showTab('worksheet');
+  setTimeout(function(){window.print()},300);
+}
+
+// SHARE
+function doShare(){
+  if(navigator.share)navigator.share({title:'Pizza Deal Calculator',text:'I found the best pizza deal using πr².com!',url:location.href});
+  else doCopy();
+}
+function doCopy(){
+  navigator.clipboard.writeText(location.href).then(function(){notify('Link copied!')}).catch(function(){notify('Link: '+location.href)});
+}
+
+// UTILS
+function notify(msg){
+  var el=document.getElementById('notif');
+  el.textContent=msg;el.classList.add('show');
+  setTimeout(function(){el.classList.remove('show')},3000);
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+// INIT
+learnCalc();
+ssRows=[
+  {id:ssId++,student:'Alex',restaurant:"Joe's Pizza",d1:'12',p1:'11.99',d2:'16',p2:'18.99'},
+  {id:ssId++,student:'Sam',restaurant:"Pizza Hut",d1:'10',p1:'9.99',d2:'14',p2:'13.99'}
+];
+renderSS();
+</script>
+</body>
+</html>
