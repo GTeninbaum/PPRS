@@ -54,6 +54,8 @@ nav{background:white;border-bottom:3px solid var(--orange);position:sticky;top:0
 .hero-callout p{font-size:1.05rem;font-weight:700;color:var(--dark);line-height:1.65;margin-bottom:.4rem}
 .hero-callout .hero-sub{font-size:.88rem;font-weight:600;color:var(--gray);line-height:1.65}
 .hero-callout strong{color:var(--orange)}
+.hero-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:.45rem;margin-top:.9rem}
+.hero-tag{background:white;border:1.5px solid var(--border);border-radius:20px;padding:.3rem .85rem;font-size:.78rem;font-weight:800;color:var(--dark);white-space:nowrap}
 .cbw{display:flex;justify-content:center;padding:0 1.5rem 2rem}
 .cbtn{background:linear-gradient(135deg,var(--ol),var(--od));color:white;border:none;border-radius:50px;padding:.9rem 2.5rem;font-family:'Nunito',sans-serif;font-size:1.05rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:.5rem;box-shadow:0 4px 15px rgba(244,98,31,.4);transition:all .2s}
 .cbtn:hover{transform:translateY(-2px)}
@@ -324,7 +326,6 @@ gtag('config', 'G-04BY384GWQ');
 
 <div class="a2hs" id="a2hs-banner">
   <div class="a2hs-left">
-    <span class="a2hs-icon">🍕</span>
     <span class="a2hs-msg">Use as an app &mdash;</span>
     <span class="a2hs-chip"><span>iPhone:</span> Share → Add to Home Screen</span>
     <span class="a2hs-chip"><span>Android:</span> Menu → Add to Home Screen</span>
@@ -343,10 +344,8 @@ gtag('config', 'G-04BY384GWQ');
 
 <!-- CALCULATOR -->
 <div class="page active" id="page-calc">
-  <div class="ph"><h1>The large pizza is almost always the better deal, but not always.</h1><p>Enter two sizes and prices and we'll do the math.</p></div>
-  <div class="hero-callout">
-    <p class="hero-sub">More area isn't enough on its own. The real question is what you're paying for each bite — that's what <strong>cost per Pizzabyte</strong> answers.</p>
-  </div>
+  <div class="ph"><h1>The large pizza is usually the better deal, but not always.</h1><p>Enter the diameter and price for each size. We'll calculate the cost per bite and tell you which one is the better value.</p></div>
+
   <div class="calc-grid">
     <div class="pcard">
       <div class="pcard-head"><div class="pic or">🍕</div><div><h2 style="font-size:1.15rem;font-weight:800">Large Pizza</h2><p style="font-size:.8rem;color:var(--gray);font-weight:600;margin-top:.1rem">Enter the size and price from the menu</p></div></div>
@@ -658,7 +657,7 @@ gtag('config', 'G-04BY384GWQ');
         <div class="footer-tagline" style="margin-top:.3rem">Made with 🍕 and π to maximize your pizza happiness!</div>
         <div class="footer-tagline">Because life's too short for overpriced pizza.</div>
       </div>
-      <div style="font-size:.75rem;font-weight:600;color:rgba(255,255,255,.3);text-align:right">Free to use · No ads · No tracking</div>
+      <div style="font-size:.75rem;font-weight:600;color:rgba(255,255,255,.3);text-align:right">Free to use · No ads · No tracking<br><span style="margin-top:.35rem;display:inline-block">Questions or comments? <a href="mailto:gabe@spacedrepetition.com" style="color:rgba(255,255,255,.55);font-weight:700;text-decoration:underline">Contact us!</a></span></div>
     </div>
   </div>
 </footer>
