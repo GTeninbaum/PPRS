@@ -18,6 +18,14 @@
   --yellow:#F5C842;
 }
 body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh}
+.a2hs{background:white;border-bottom:2px solid var(--border);padding:.6rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:.82rem;font-weight:600;color:var(--dark)}
+.a2hs-left{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.a2hs-icon{font-size:1.1rem;flex-shrink:0}
+.a2hs-msg{font-weight:700;color:var(--dark)}
+.a2hs-chip{display:inline-flex;align-items:center;gap:.3rem;background:var(--lg);border:1px solid var(--border);border-radius:20px;padding:.2rem .65rem;font-size:.78rem;font-weight:700;color:var(--gray);white-space:nowrap}
+.a2hs-chip span{color:var(--orange);font-weight:800}
+.a2hs-close{background:none;border:none;color:var(--gray);cursor:pointer;font-size:1.1rem;flex-shrink:0;padding:.2rem .4rem;border-radius:6px;font-family:'Nunito',sans-serif;font-weight:700;line-height:1}
+.a2hs-close:hover{background:var(--lg);color:var(--dark)}
 nav{background:white;border-bottom:3px solid var(--orange);position:sticky;top:0;z-index:200;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:60px}
 .logo{display:flex;align-items:center;gap:.4rem;font-size:1.25rem;font-weight:900;color:var(--dark);cursor:pointer}
 .logo .pi{color:var(--orange)}
@@ -297,36 +305,58 @@ footer{background:var(--dark);color:white;padding:2.5rem 1.5rem}
   .footer-top{gap:1.25rem}
 }
 </style>
+<!-- App meta tags -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="🍕 πr².com">
+<meta name="theme-color" content="#F4621F">
+<meta name="mobile-web-app-capable" content="yes">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-04BY384GWQ"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-04BY384GWQ');
+</script>
 </head>
 <body>
 
+<div class="a2hs" id="a2hs-banner">
+  <div class="a2hs-left">
+    <span class="a2hs-icon">🍕</span>
+    <span class="a2hs-msg">Use as an app &mdash;</span>
+    <span class="a2hs-chip"><span>iPhone:</span> Share → Add to Home Screen</span>
+    <span class="a2hs-chip"><span>Android:</span> Menu → Add to Home Screen</span>
+  </div>
+  <button class="a2hs-close" onclick="dismissA2HS()" aria-label="Dismiss">✕</button>
+</div>
 <nav>
   <div class="logo" onclick="showPage('calc')"><span>🍕</span><span><span class="pi">πr²</span>.com</span></div>
   <div class="navlinks">
     <button class="nl active" id="nav-calc" onclick="showPage('calc')">🧮 <span class="lbl">Calculator</span></button>
     <button class="nl" id="nav-learn" onclick="showPage('learn')">📖 <span class="lbl">Learn</span></button>
-    <button class="nl" id="nav-teachers" onclick="showPage('teachers')">🎓 <span class="lbl">Teachers</span></button>
     <button class="nl" id="nav-limits" onclick="showPage('limits')">⚠️ <span class="lbl">Limits</span></button>
+    <button class="nl" id="nav-teachers" onclick="showPage('teachers')">🎓 <span class="lbl">Teachers</span></button>
   </div>
 </nav>
 
 <!-- CALCULATOR -->
 <div class="page active" id="page-calc">
-  <div class="ph"><h1>Enter Your Pizza Details</h1><p>We'll calculate how much pizza you're getting for your money</p></div>
+  <div class="ph"><h1>The large pizza is almost always the better deal, but not always.</h1><p>Enter two sizes and prices and we'll do the math.</p></div>
   <div class="hero-callout">
-    <p>Bigger pizza, better deal? Usually — but not always. Enter your two options and find out exactly how much more you're getting per dollar.</p>
-    <p class="hero-sub">More area isn't enough on its own. What matters is <strong>cost per Pizzabyte</strong> — how much each bite actually costs you. That's what decides the winner.</p>
+    <p class="hero-sub">More area isn't enough on its own. The real question is what you're paying for each bite — that's what <strong>cost per Pizzabyte</strong> answers.</p>
   </div>
   <div class="calc-grid">
     <div class="pcard">
-      <div class="pcard-head"><div class="pic or">🍕</div><div><h2 style="font-size:1.15rem;font-weight:800">Large Pizza</h2><p class="hint" style="margin-top:.1rem">Enter your pizza's details below</p></div></div>
-      <div class="fg"><label>Diameter (inches)</label><input type="number" id="ld" value="16" min="1" max="48" step="0.5"><div class="hint">Example: 16" — replace with your pizza's size</div></div>
-      <div class="fg"><label>Price ($)</label><input type="number" id="lp" value="18.99" min="0" step="0.01"><div class="hint">Example: $18.99 — replace with your pizza's price</div></div>
+      <div class="pcard-head"><div class="pic or">🍕</div><div><h2 style="font-size:1.15rem;font-weight:800">Large Pizza</h2><p style="font-size:.8rem;color:var(--gray);font-weight:600;margin-top:.1rem">Enter the size and price from the menu</p></div></div>
+      <div class="fg"><label>Diameter (inches)</label><input type="number" id="ld" placeholder="e.g. 16" min="1" max="48" step="0.5"></div>
+      <div class="fg"><label>Price ($)</label><input type="number" id="lp" placeholder="e.g. 18.99" min="0" step="0.01"></div>
     </div>
     <div class="pcard">
-      <div class="pcard-head"><div class="pic am">🍕</div><div><h2 style="font-size:1.15rem;font-weight:800">Small Pizza</h2><p class="hint" style="margin-top:.1rem">Enter your pizza's details below</p></div></div>
-      <div class="fg"><label>Diameter (inches)</label><input type="number" id="sd" value="12" min="1" max="48" step="0.5"><div class="hint">Example: 12" — replace with your pizza's size</div></div>
-      <div class="fg"><label>Price ($)</label><input type="number" id="sp" value="12.99" min="0" step="0.01"><div class="hint">Example: $12.99 — replace with your pizza's price</div></div>
+      <div class="pcard-head"><div class="pic am">🍕</div><div><h2 style="font-size:1.15rem;font-weight:800">Small Pizza</h2><p style="font-size:.8rem;color:var(--gray);font-weight:600;margin-top:.1rem">Enter the size and price from the menu</p></div></div>
+      <div class="fg"><label>Diameter (inches)</label><input type="number" id="sd" placeholder="e.g. 12" min="1" max="48" step="0.5"></div>
+      <div class="fg"><label>Price ($)</label><input type="number" id="sp" placeholder="e.g. 12.99" min="0" step="0.01"></div>
     </div>
   </div>
   <div class="cbw"><button class="cbtn" onclick="doCalc()">🧮 Calculate Best Deal!</button></div>
@@ -349,7 +379,7 @@ footer{background:var(--dark);color:white;padding:2.5rem 1.5rem}
 <div class="page" id="page-learn">
   <div class="ph"><h1>The Math Behind the Pizza</h1><p>Why geometry matters when buying pizza</p></div>
   <div class="li">
-    <div class="lcallout">A bigger pizza has more area — but that's only half the story. The real question is what you're paying for each bite. 🍕 That's what Pizzabytes are for.</div>
+    <div class="lcallout">A bigger pizza always has more area. But more area at a higher price might still be a worse deal. Here's the math that settles it. 🍕</div>
     <div class="tgc wh" style="padding:1.5rem;margin-bottom:1.4rem">
       <h3>🔢 Try It: Enter Any Two Pizzas</h3>
       <div class="linputs">
@@ -604,7 +634,7 @@ footer{background:var(--dark);color:white;padding:2.5rem 1.5rem}
     <div class="footer-top">
       <div class="footer-col">
         <h4>🍕 πr².com</h4>
-        <p>The pizza value calculator that teaches real-world math. Free forever for students and teachers.</p>
+        <p>The pizza value calculator that teaches real-world math. Free forever for students, teachers, and pizza enthusiasts.</p>
       </div>
       <div class="footer-col">
         <h4>Tools</h4>
@@ -615,7 +645,7 @@ footer{background:var(--dark);color:white;padding:2.5rem 1.5rem}
         <a onclick="showPage('teachers');showTab('graph')">📈 Live Graphs</a>
       </div>
       <div class="footer-col">
-        <h4>Teachers</h4>
+        <h4>Teach It</h4>
         <a onclick="showPage('teachers');showTab('lesson')">⏱ Lesson Plan</a>
         <a onclick="showPage('teachers');showTab('standards')">📚 Standards Alignment</a>
         <a onclick="showPage('teachers');showTab('analysis')">🔍 Discussion Guide</a>
@@ -684,7 +714,8 @@ function doCalc(){
   var lp=parseFloat(document.getElementById('lp').value);
   var sd=parseFloat(document.getElementById('sd').value);
   var sp=parseFloat(document.getElementById('sp').value);
-  if([ld,lp,sd,sp].some(function(v){return isNaN(v)||v<=0})){notify('Please fill in all fields with valid numbers.');return}
+  if([ld,lp,sd,sp].some(function(v){return isNaN(v)||v<=0})){notify('Please enter diameter and price for both sizes.');return}
+  if(typeof gtag !== 'undefined'){gtag('event','calculate',{event_category:'calculator',large_diameter:ld,large_price:lp,small_diameter:sd,small_price:sp});}
   var la=pArea(ld),sa=pArea(sd),lr=pRate(ld,lp),sr=pRate(sd,sp);
   var lb=pBytes(ld),sb=pBytes(sd),lc=cpb(ld,lp),sc=cpb(sd,sp);
   var lw=lr<=sr;
@@ -1063,6 +1094,17 @@ function notify(msg){
   setTimeout(function(){el.classList.remove('show')},3000);
 }
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+// ADD TO HOME SCREEN
+function dismissA2HS(){
+  var el=document.getElementById('a2hs-banner');
+  if(el){el.style.transition='all .25s';el.style.opacity='0';el.style.maxHeight='0';el.style.padding='0';setTimeout(function(){el.style.display='none'},260);}
+}
+// Hide if already running as standalone app
+if(window.matchMedia('(display-mode: standalone)').matches){
+  var el=document.getElementById('a2hs-banner');
+  if(el)el.style.display='none';
+}
 
 // INIT
 learnCalc();
